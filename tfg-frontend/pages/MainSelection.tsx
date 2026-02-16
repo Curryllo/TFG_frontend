@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { BarChart3, FileText } from 'lucide-react';
-//import RegistrationTypeSelection from './RegistrationTypeSelection';
+import RegistrationTypeSelection from './RegistrationTypeSelection';
 import DataVisualization from './DataVisualization';
 
 type ViewType = 'selection' | 'register' | 'visualize';
@@ -10,13 +10,9 @@ type ViewType = 'selection' | 'register' | 'visualize';
 export default function MainSelection() {
     const [currentView, setCurrentView] = useState<ViewType>('selection');
 
-    /*
     if (currentView === 'register') {
         return <RegistrationTypeSelection onBack={() => setCurrentView('selection')} />;
-    }
-    */
-
-    if (currentView === 'visualize') {
+    } else  if (currentView === 'visualize') {
         return <DataVisualization onBack={() => setCurrentView('selection')} />;
     }
 
