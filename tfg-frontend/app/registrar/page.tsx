@@ -43,7 +43,7 @@ export default function RegistrationTypeSelection() {
                             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-200 transition-colors">
                                 <Bug className="w-10 h-10 text-green-600" />
                             </div>
-                            <h2 className="text-xl font-semibold text-gray-900">Monitoreo Entomológico</h2>
+                            <h2 className="text-lg font-semibold text-gray-900 whitespace-nowrap">Monitoreo Entomológico</h2>
                             <p className="text-gray-600 text-center text-sm">
                                 Registrar datos de vigilancia de vectores
                             </p>
