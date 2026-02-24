@@ -1,3 +1,5 @@
+import { postHumanos } from "@/app/registrar/(registros)/humanos/actions";
+
 export default function HumanosForm() {
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
@@ -8,7 +10,7 @@ export default function HumanosForm() {
                 Ingrese los detalles del caso de enfermedad en humano
             </p>
 
-            <form className="space-y-6">
+            <form className="space-y-6" action={postHumanos}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Edad */}
                     <div>
