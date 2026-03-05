@@ -1,6 +1,6 @@
 'use server'
 
-export async function postHumanos(data: FormData) {
+export async function postHumanos(prevState: any, data: FormData) {
     const edad = Number(data.get('edad'));
     const sexo = data.get('sexo');
     const fechaInicioSintomas = data.get('fechaInicioSintomas');
@@ -28,6 +28,11 @@ export async function postHumanos(data: FormData) {
             casoHospitalizado
         }),
     });
+
+    if(!response.ok) {
+        return { success: false, message: `Error del servidor: ${response.status}` };
+    }
     const result = await response.json();
-    return result;
+
+    return { success: true, data: result };
 }

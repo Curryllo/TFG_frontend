@@ -24,16 +24,29 @@ export default function MonitoreoForm() {
                         />
                     </div>
 
-                    {/* Especie */}
+                    {/* Género */}
                     <div>
-                        <label htmlFor="especie" className="block text-sm font-medium text-gray-600 mb-1">
-                            Especie *
+                        <label htmlFor="genero" className="block text-sm font-medium text-gray-600 mb-1">
+                            Género Vector *
                         </label>
                         <input
                             type="text"
-                            id="especie"
-                            name="especie"
+                            id="genero"
+                            name="genero"
                             required
+                            className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
+                        />
+                    </div>
+
+                    {/* Especie */}
+                    <div>
+                        <label htmlFor="especieVegetacion" className="block text-sm font-medium text-gray-600 mb-1">
+                            Especie Vegetación
+                        </label>
+                        <input
+                            type="text"
+                            id="especieVegetacion"
+                            name="especieVegetacion"
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>

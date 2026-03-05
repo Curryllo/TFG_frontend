@@ -1,5 +1,9 @@
+'use client'
+
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { obtenerBoundary } from "@/app/visualizar/graficos/action";
+
 
 export default function VisualizacionGraficos() {
     return (
@@ -21,6 +25,13 @@ export default function VisualizacionGraficos() {
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Información Referente a Casos Humanos</h2>
                 </div>
             </div>
+
+            <button onClick={async () => {
+                const data = await obtenerBoundary(new FormData());
+                console.log(data);
+            }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Obtener Boundary
+            </button>
         </div>
     );
 }
