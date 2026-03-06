@@ -66,6 +66,19 @@ export default function MonitoreoForm() {
                             <option value="M" className="text-gray-600">Macho</option>
                         </select>
                     </div>
+                    
+                    {/* Fecha */}
+                    <div>
+                        <label htmlFor="fecha" className="block text-sm font-medium text-gray-600 mb-1">
+                            Fecha
+                        </label>
+                        <input
+                            type="date"
+                            id="fecha"
+                            name="fecha"
+                            className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
+                        />
+                    </div>
                 </div>
             </form>
         </div>

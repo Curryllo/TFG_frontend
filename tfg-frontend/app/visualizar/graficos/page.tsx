@@ -28,9 +28,9 @@ export default function VisualizacionGraficos() {
 
             <button onClick={async () => {
                 const data = await obtenerBoundary(new FormData());
-                console.log(data);
+                console.log("VALOR REAL:", JSON.parse(JSON.stringify(data)));
             }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Obtener Boundary
+                Obtener Bites
             </button>
         </div>
     );

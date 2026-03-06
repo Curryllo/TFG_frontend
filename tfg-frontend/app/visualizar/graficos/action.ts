@@ -1,11 +1,12 @@
 'use server'
 
-import { BoundariesApi, Configuration, TemporaryBoundaryRequest } from 'mosquito-alert';
+import { BoundariesApi, Configuration, TemporaryBoundaryRequest, BitesApi } from 'mosquito-alert';
 
 export async function obtenerBoundary(datos: FormData) {
     try {
         const configuration = new Configuration();
-        const apiInstance = new BoundariesApi(configuration);
+        const apiInstanceBoundaries = new BoundariesApi(configuration);
+        const apiInstanceBites = new BitesApi(configuration);
 
         let temporaryBoundaryRequest: TemporaryBoundaryRequest = {
             geojson: {
@@ -26917,9 +26918,12 @@ export async function obtenerBoundary(datos: FormData) {
             }
         };
 
-        const { status, data } = await apiInstance.createTemporary({ temporaryBoundaryRequest });
-
-        return data;
+        const { status: statusBoundary, data: dataBoundary } = await apiInstanceBoundaries.createTemporary({ temporaryBoundaryRequest });
+        let uuidParaConsultar = dataBoundary.uuid;
+        console.log("UUID generado:", uuidParaConsultar);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const responseBites = await apiInstanceBites.geoList({boundaryUuid: uuidParaConsultar});
+        return JSON.parse(JSON.stringify(responseBites.data));
     } catch (error) {
         console.error("EL SERVIDOR DICE:", JSON.stringify(error.response.data, null, 2));
         throw error;
