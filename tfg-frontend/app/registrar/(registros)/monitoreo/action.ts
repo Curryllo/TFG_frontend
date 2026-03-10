@@ -8,6 +8,7 @@ export async function postMonitoreo(prevState: any, data: FormData) {
     const enfermedad = data.get('enfermedad');
     const genero = data.get('genero');
     const fecha = data.get('fecha');
+    const numero = data.get('numero') ? Number(data.get('numero')) : null;
     
 
     const response = await fetch('http://172.31.245.33:8080/api/formMonitoreo', {
@@ -22,7 +23,8 @@ export async function postMonitoreo(prevState: any, data: FormData) {
             vector,
             enfermedad,
             genero,
-            fecha
+            fecha,
+            numero
         }),
     });
 

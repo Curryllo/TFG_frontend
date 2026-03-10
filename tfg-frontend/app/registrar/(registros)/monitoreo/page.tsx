@@ -147,6 +147,7 @@ export default function MonitoreoForm() {
                             type="date"
                             id="fecha"
                             name="fecha"
+                            required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
