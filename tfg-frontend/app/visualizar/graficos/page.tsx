@@ -4,6 +4,11 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { obtenerBoundary } from "@/app/visualizar/graficos/action";
 
+import { AllCommunityModule, ModuleRegistry } from 'ag-charts-community';
+import { AgCharts } from "ag-charts-react";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
+
 
 export default function VisualizacionGraficos() {
     return (

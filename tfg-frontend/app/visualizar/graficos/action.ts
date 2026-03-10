@@ -3,6 +3,7 @@
 import { BoundariesApi, Configuration, TemporaryBoundaryRequest, BitesApi } from 'mosquito-alert';
 
 export async function obtenerBoundary(datos: FormData) {
+    /*
     try {
         const configuration = new Configuration();
         const apiInstanceBoundaries = new BoundariesApi(configuration);
@@ -26928,6 +26929,7 @@ export async function obtenerBoundary(datos: FormData) {
         console.error("EL SERVIDOR DICE:", JSON.stringify(error.response.data, null, 2));
         throw error;
     }
+    */
 
 
 
