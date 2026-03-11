@@ -7,9 +7,17 @@ export default function MonitoreoForm() {
 
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
+    const [lugar, setLugar] = useState('');
+    const [latitud, setLatitud] = useState('');
+    const [longitud, setLongitud] = useState('');
+
     useEffect(() => {
         if (state?.success) {
             setMostrarPopUp(true);
+
+            setLugar('');
+            setLatitud('');
+            setLongitud('');
 
             const timer = setTimeout(() => {
                 setMostrarPopUp(false);
@@ -19,10 +27,12 @@ export default function MonitoreoForm() {
         }
     }, [state]);
 
+    const isAnyLugar = lugar.length > 0 || (latitud.length > 0 && longitud.length > 0);
+
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
-                        {mostrarPopUp && (
+            {mostrarPopUp && (
                 <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
                     <div className="bg-teal-600 text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 border-2 border-teal-400">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,6 +61,14 @@ export default function MonitoreoForm() {
                             type="text"
                             id="lugar"
                             name="lugar"
+                            value={lugar}
+                            onChange={(e) => {
+                                setLugar(e.target.value);
+                                if (e.target.value) {
+                                    setLatitud('');
+                                    setLongitud('');
+                                }
+                            }}
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
@@ -65,6 +83,13 @@ export default function MonitoreoForm() {
                             step="any"
                             id="latitud"
                             name="latitud"
+                            value={latitud}
+                            onChange={(e) => {
+                                setLatitud(e.target.value);
+                                if (e.target.value) {
+                                    setLugar('');
+                                }
+                            }}
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
@@ -79,6 +104,13 @@ export default function MonitoreoForm() {
                             step="any"
                             id="longitud"
                             name="longitud"
+                            value={longitud}
+                            onChange={(e) => {
+                                setLongitud(e.target.value);
+                                if (e.target.value) {
+                                    setLugar('');
+                                }
+                            }}
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
@@ -128,16 +160,17 @@ export default function MonitoreoForm() {
                     {/* Número */}
                     <div>
                         <label htmlFor="numero" className="block text-sm font-medium text-gray-600 mb-1">
-                            Número Vectores
+                            Número Vectores *
                         </label>
                         <input
                             type="number"
                             id="numero"
                             name="numero"
+                            required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
-                    
+
                     {/* Fecha */}
                     <div>
                         <label htmlFor="fecha" className="block text-sm font-medium text-gray-600 mb-1">
@@ -153,9 +186,16 @@ export default function MonitoreoForm() {
                     </div>
                 </div>
 
+                {!isAnyLugar && (
+                    <p className="text-amber-600 text-sm font-medium animate-pulse">
+                        * Debe completar Lugar o Latitud y Longitud.
+                    </p>
+                )}
+
                 <div className="pt-4 flex justify-end">
                     <button
                         type="submit"
+                        disabled={!isAnyLugar}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         Guardar Registro
