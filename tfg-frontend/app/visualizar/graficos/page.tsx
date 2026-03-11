@@ -30,13 +30,14 @@ export default function VisualizacionGraficos() {
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Información Referente a Casos Humanos</h2>
                 </div>
             </div>
-
+            {/*
             <button onClick={async () => {
                 const data = await obtenerBoundary(new FormData());
                 console.log("VALOR REAL:", JSON.parse(JSON.stringify(data)));
             }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Obtener Bites
             </button>
+             */}
         </div>
     );
 }
