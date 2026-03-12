@@ -21,13 +21,23 @@ export default function VisualizacionGraficos() {
                     </div>
                 </Link>
 
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Gráficos Estadísticos</h1>
-                    <p className="text-gray-600">Análisis visual de los datos de enfermedades vectoriales</p>
-                </div>
+                <div className="max-w-4xl w-full mx-auto">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Gráficos</h1>
+                    <p className="text-gray-600">Análisis gráfico de los datos de enfermedades vectoriales</p>
 
-                <div className="mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Información Referente a Casos Humanos</h2>
+                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                        <div className="p-4 border-b border-gray-100">
+                            <h2 className="text-xl font-bold text-gray-900">Monitoreo Entomológico Combinado</h2>
+                        </div>
+                        <div className="w-full h-[3000px]">
+                            <iframe
+                                title="Monitoreo Entomológico - Power BI"
+                                src="https://app.powerbi.com/view?r=eyJrIjoiYmIzMGRiNGYtMWZiMC00NjlhLWI5NzgtNmM2ZDgwZTc4MTQ3IiwidCI6IjNmMjI3ZGJhLWYzZjQtNDU0NC1iMzE0LWM2ZWZkMzBlMGQwMCIsImMiOjh9&pageName=db193415704a5ec5920c&navContentPaneEnabled=false&filterPaneEnabled=false"
+                                className="w-full h-full border-0"
+                                allowFullScreen={true}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
             {/*
