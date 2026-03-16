@@ -13,7 +13,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default function VisualizacionGraficos() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4">
-            <div className="max-w-4xl w-full">
+            <div className="max-w-6xl w-full">
                 <Link href="/visualizar" className="block">
                     <div className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors">
                         <ArrowLeft className="w-5 h-5" />
@@ -21,7 +21,6 @@ export default function VisualizacionGraficos() {
                     </div>
                 </Link>
 
-                <div className="max-w-4xl w-full mx-auto">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Gráficos</h1>
                     <p className="text-gray-600">Análisis gráfico de los datos de enfermedades vectoriales</p>
 
@@ -37,7 +36,6 @@ export default function VisualizacionGraficos() {
                                 allowFullScreen={true}
                             />
                         </div>
-                    </div>
                 </div>
             </div>
             {/*
