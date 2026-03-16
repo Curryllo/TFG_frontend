@@ -21,21 +21,21 @@ export default function VisualizacionGraficos() {
                     </div>
                 </Link>
 
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Gráficos</h1>
-                    <p className="text-gray-600">Análisis gráfico de los datos de enfermedades vectoriales</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Gráficos</h1>
+                <p className="text-gray-600">Análisis gráfico de los datos de enfermedades vectoriales</p>
 
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                        <div className="p-4 border-b border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-900">Monitoreo Entomológico Combinado</h2>
-                        </div>
-                        <div className="w-full h-[3000px]">
-                            <iframe
-                                title="Monitoreo Entomológico - Power BI"
-                                src="https://app.powerbi.com/view?r=eyJrIjoiZDNjYzgyYjMtMGZkNC00Yjc5LWE2OTItNTMxYTY3YTY0ZjhhIiwidCI6IjNmMjI3ZGJhLWYzZjQtNDU0NC1iMzE0LWM2ZWZkMzBlMGQwMCIsImMiOjh9&pageName=db193415704a5ec5920c&navContentPaneEnabled=false&filterPaneEnabled=false"
-                                className="w-full h-full border-0"
-                                allowFullScreen={true}
-                            />
-                        </div>
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div className="p-4 border-b border-gray-100">
+                        <h2 className="text-xl font-bold text-gray-900">Monitoreo Entomológico Combinado</h2>
+                    </div>
+                    <div className="w-full h-[3000px]">
+                        <iframe
+                            title="Monitoreo Entomológico - Power BI"
+                            src="https://app.powerbi.com/view?r=eyJrIjoiZDNjYzgyYjMtMGZkNC00Yjc5LWE2OTItNTMxYTY3YTY0ZjhhIiwidCI6IjNmMjI3ZGJhLWYzZjQtNDU0NC1iMzE0LWM2ZWZkMzBlMGQwMCIsImMiOjh9&pageName=db193415704a5ec5920c&navContentPaneEnabled=false&filterPaneEnabled=false"
+                            className="w-full h-full border-0"
+                            allowFullScreen={true}
+                        />
+                    </div>
                 </div>
             </div>
             {/*
