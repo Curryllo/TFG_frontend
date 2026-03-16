@@ -132,13 +132,12 @@ export default function MonitoreoForm() {
                     {/* Enfermedad */}
                     <div>
                         <label htmlFor="enfermedad" className="block text-sm font-medium text-gray-600 mb-1">
-                            Enfermedad *
+                            Enfermedad
                         </label>
                         <input
                             type="text"
                             id="enfermedad"
                             name="enfermedad"
-                            required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>

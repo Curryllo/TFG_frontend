@@ -32,7 +32,7 @@ export default function VisualizacionGraficos() {
                         <div className="w-full h-[3000px]">
                             <iframe
                                 title="Monitoreo Entomológico - Power BI"
-                                src="https://app.powerbi.com/view?r=eyJrIjoiYmIzMGRiNGYtMWZiMC00NjlhLWI5NzgtNmM2ZDgwZTc4MTQ3IiwidCI6IjNmMjI3ZGJhLWYzZjQtNDU0NC1iMzE0LWM2ZWZkMzBlMGQwMCIsImMiOjh9&pageName=db193415704a5ec5920c&navContentPaneEnabled=false&filterPaneEnabled=false"
+                                src="https://app.powerbi.com/view?r=eyJrIjoiZDNjYzgyYjMtMGZkNC00Yjc5LWE2OTItNTMxYTY3YTY0ZjhhIiwidCI6IjNmMjI3ZGJhLWYzZjQtNDU0NC1iMzE0LWM2ZWZkMzBlMGQwMCIsImMiOjh9&pageName=db193415704a5ec5920c&navContentPaneEnabled=false&filterPaneEnabled=false"
                                 className="w-full h-full border-0"
                                 allowFullScreen={true}
                             />

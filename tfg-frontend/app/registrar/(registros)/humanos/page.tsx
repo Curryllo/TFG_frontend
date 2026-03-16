@@ -7,20 +7,11 @@ export default function HumanosForm() {
 
     const [state, formAction, isPending] = useActionState(postHumanos, null);
 
-    const [municipioCaso, setMunicipioCaso] = useState('');
-    const [municipioResidencia, setMunicipioResidencia] = useState('');
-    const [municipioDeclarante, setMunicipioDeclarante] = useState('');
-
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
     useEffect(() => {
         if (state?.success) {
             setMostrarPopUp(true);
-
-            setMunicipioCaso('');
-            setMunicipioResidencia('');
-            setMunicipioDeclarante('');
-
             
             const timer = setTimeout(() => {
                 setMostrarPopUp(false);
@@ -29,16 +20,6 @@ export default function HumanosForm() {
             return () => clearTimeout(timer);
         }
     }, [state]);
-
-
-    const isResidenciaDisabled = municipioCaso.length > 0 || municipioDeclarante.length > 0;
-    const isDeclaranteDisabled = municipioResidencia.length > 0 || municipioCaso.length > 0;
-    const isCasoDisabled = municipioResidencia.length > 0 || municipioDeclarante.length > 0;
-
-    const isAnyMunicipioFilled =
-        municipioCaso.length > 0 ||
-        municipioResidencia.length > 0 ||
-        municipioDeclarante.length > 0;
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
@@ -94,90 +75,80 @@ export default function HumanosForm() {
                         </select>
                     </div>
 
-                    {/* Fecha de Inicio de Síntomas */}
+                    {/* Fecha del Caso */}
                     <div>
-                        <label htmlFor="fechaInicioSintomas" className="block text-sm font-medium text-gray-600 mb-1">
-                            Fecha Inicio de Síntomas
+                        <label htmlFor="fechaCaso" className="block text-sm font-medium text-gray-600 mb-1">
+                            Fecha del Caso *
                         </label>
                         <input
                             type="date"
-                            id="fechaInicioSintomas"
-                            name="fechaInicioSintomas"
+                            id="fechaCaso"
+                            name="fechaCaso"
+                            required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
 
-                    {/* Municipio Caso */}
+                    {/* Enfermedad */}
                     <div>
-                        <label htmlFor="municipioCaso" className="block text-sm font-medium text-gray-600 mb-1">
-                            Municipio del Caso (1-52)
+                        <label htmlFor="enfermedad" className="block text-sm font-medium text-gray-600 mb-1">
+                            Enfermedad *
                         </label>
                         <input
-                            type="number"
-                            disabled={isCasoDisabled}
-                            id="municipioCaso"
-                            name="municipioCaso"
-                            min="1"
-                            max="52"
-                            value={municipioCaso}
-                            onChange={(e) => {
-                                setMunicipioCaso(e.target.value);
-                                if (e.target.value) {
-                                    setMunicipioResidencia("");
-                                    setMunicipioDeclarante("");
-                                }
-                            }}
+                            type="text"
+                            id="enfermedad"
+                            name="enfermedad"
+                            required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
 
-                    {/* Municipio Residencia */}
+                    {/* País de Infección */}
+                    <div>
+                        <label htmlFor="pais" className="block text-sm font-medium text-gray-600 mb-1">
+                            País de Infección *
+                        </label>
+                        <input
+                            type="text"
+                            id="pais"
+                            name="pais"
+                            required
+                            className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
+                        />
+                    </div>
+
+                    {/* Provincia de Residencia */}
+                    <div>
+                        <label htmlFor="provinciaResidencia" className="block text-sm font-medium text-gray-600 mb-1">
+                            Provincia de Residencia del Paciente *
+                        </label>
+                        <select
+                            id="provinciaResidencia"
+                            name="provinciaResidencia"
+                            required
+                            className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
+                        >
+                            <option value="Z" className="text-gray-600">Zaragoza</option>
+                            <option value="H" className="text-gray-600">Huesca</option>
+                            <option value="T" className="text-gray-600">Teruel</option>
+                        </select>
+                    </div>
+
+                    {/* Municipio de Residencia del Paciente */}
                     <div>
                         <label htmlFor="municipioResidencia" className="block text-sm font-medium text-gray-600 mb-1">
-                            Municipio de Residencia (1-52)
+                            Municipio de Residencia del Paciente *
                         </label>
                         <input
-                            type="number"
-                            disabled={isResidenciaDisabled}
+                            type="text"
                             id="municipioResidencia"
                             name="municipioResidencia"
-                            min="1"
-                            max="52"
-                            value={municipioResidencia}
-                            onChange={(e) => {
-                                setMunicipioResidencia(e.target.value);
-                                if (e.target.value) setMunicipioDeclarante("");
-                            }}
-                            className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
-                        />
-                    </div>
-
-                    {/* Municipio Declarante */}
-                    <div>
-                        <label htmlFor="municipioDeclarante" className="block text-sm font-medium text-gray-600 mb-1">
-                            Municipio Declarante (1-52)
-                        </label>
-                        <input
-                            type="number"
-                            disabled={isDeclaranteDisabled}
-                            id="municipioDeclarante"
-                            name="municipioDeclarante"
-                            min="1"
-                            max="52"
-                            value={municipioDeclarante}
-                            onChange={(e) => setMunicipioDeclarante(e.target.value)}
+                            required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>
                 </div>
 
-                {!isAnyMunicipioFilled && (
-                    <p className="text-amber-600 text-sm font-medium animate-pulse">
-                        * Debe completar al menos un municipio (Caso, Residencia o Declarante).
-                    </p>
-                )}
-
-                {/* Booleans Row */}
                 <div className="flex flex-col sm:flex-row gap-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <label className="flex items-center space-x-3 cursor-pointer">
                         <input
@@ -203,7 +174,6 @@ export default function HumanosForm() {
                 <div className="pt-4 flex justify-end">
                     <button
                         type="submit"
-                        disabled={!isAnyMunicipioFilled}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         Guardar Registro

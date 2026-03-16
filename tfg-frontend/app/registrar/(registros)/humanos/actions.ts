@@ -3,11 +3,13 @@
 export async function postHumanos(prevState: any, data: FormData) {
     const edad = Number(data.get('edad'));
     const sexo = data.get('sexo');
-    const fechaInicioSintomas = data.get('fechaInicioSintomas');
+    const fechaCaso = data.get('fechaCaso');
     
-    const municipioCaso = data.get('municipioCaso') ? Number(data.get('municipioCaso')) : null;
-    const municipioResidencia = data.get('municipioResidencia') ? Number(data.get('municipioResidencia')) : null;
-    const municipioDeclarante = data.get('municipioDeclarante') ? Number(data.get('municipioDeclarante')) : null;
+    const enfermedad = data.get('enfermedad');
+    const pais = data.get('pais');
+
+    const provinciaResidencia = data.get('provinciaResidencia');
+    const municipioResidencia = data.get('municipioResidencia');
     
     const defuncion = data.get('defuncion') === 'on';
     const casoHospitalizado = data.get('casoHospitalizado') === 'on';
@@ -20,10 +22,11 @@ export async function postHumanos(prevState: any, data: FormData) {
         body: JSON.stringify({
             edad,
             sexo,
-            fechaInicioSintomas,
-            municipioCaso,
+            fechaCaso,
+            enfermedad,
+            pais,
+            provinciaResidencia,
             municipioResidencia,
-            municipioDeclarante,
             defuncion,
             casoHospitalizado
         }),
