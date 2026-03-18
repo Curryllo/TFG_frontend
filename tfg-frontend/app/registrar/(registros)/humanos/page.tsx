@@ -94,13 +94,27 @@ export default function HumanosForm() {
                         <label htmlFor="enfermedad" className="block text-sm font-medium text-gray-600 mb-1">
                             Enfermedad *
                         </label>
-                        <input
-                            type="text"
+                        <select
                             id="enfermedad"
                             name="enfermedad"
                             required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
-                        />
+                        >
+                            <option value="Dengue" className="text-gray-600">Dengue</option>
+                            <option value="Encefalitis Trasmitida por Garrapatas" className="text-gray-600">Encefalitis Trasmitida por Garrapatas</option>
+                            <option value="Enfermedad de Lyme" className="text-gray-600">Enfermedad de Lyme</option>
+                            <option value="Enfermedad por virus Chikunguya" className="text-gray-600">Enfermedad por virus Chikunguya</option>
+                            <option value="Fiebre amarilla" className="text-gray-600">Fiebre amarilla</option>
+                            <option value="Fiebre del Nilo occidental" className="text-gray-600">Fiebre del Nilo occidental</option>
+                            <option value="Fiebre exantemática mediterránea" className="text-gray-600">Fiebre exantemática mediterránea</option>
+                            <option value="Fiebre recurrente transmitida por garrapatas" className="text-gray-600">Fiebre recurrente transmitida por garrapatas</option>
+                            <option value="Fiebre hemorrágicas víricas" className="text-gray-600">Fiebre hemorrágicas víricas</option>
+                            <option value="Leishmaniasis" className="text-gray-600">Leishmaniasis</option>
+                            <option value="Paludismo" className="text-gray-600">Paludismo</option>
+                            <option value="Tularemia" className="text-gray-600">Tularemia</option>
+                            <option value="Zika congénito" className="text-gray-600">Zika congénito</option>
+                            <option value="Zika" className="text-gray-600">Zika</option>
+                        </select>
                     </div>
 
                     {/* País de Infección */}

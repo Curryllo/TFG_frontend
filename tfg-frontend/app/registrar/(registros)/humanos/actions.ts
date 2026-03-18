@@ -1,4 +1,5 @@
 'use server'
+import { revalidatePath } from 'next/cache';
 
 export async function postHumanos(prevState: any, data: FormData) {
     const edad = Number(data.get('edad'));
@@ -36,6 +37,7 @@ export async function postHumanos(prevState: any, data: FormData) {
         return { success: false, message: `Error del servidor: ${response.status}` };
     }
     const result = await response.json();
+    revalidatePath('/visualizar/mapas');
 
     return { success: true, data: result };
 }
