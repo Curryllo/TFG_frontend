@@ -2,12 +2,226 @@
 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { obtenerBoundary } from "@/app/visualizar/graficos/action";
-
-import { AllCommunityModule, ModuleRegistry } from 'ag-charts-community';
+import { getDatosMontireo, getDatosHumanos } from "@/app/visualizar/graficos/action";
 import { AgCharts } from "ag-charts-react";
+import { useState, useEffect } from "react";
+import { AgChartOptions } from "ag-charts-community";
+import {
+    BarSeriesModule,
+    CategoryAxisModule,
+    LegendModule,
+    ModuleRegistry,
+    NumberAxisModule,
+    PieSeriesModule
+} from "ag-charts-community";
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([BarSeriesModule, CategoryAxisModule, LegendModule, NumberAxisModule, PieSeriesModule]);
+
+const ChartFechaBarrasHumanos = () => {
+    const [options, setOptions] = useState<AgChartOptions>({
+        title: {
+            text: "Casos registrados por fecha",
+        },
+        subtitle: {
+            text: " ",
+        },
+        data: [],
+        series: [
+            {
+                type: "bar",
+                xKey: "fecha",
+                yKey: "numero",
+                yName: "Número de casos",
+            },
+        ],
+    });
+
+    useEffect(() => {
+        const cargarDatos = async () => {
+            try {
+                const respuesta = await getDatosHumanos();
+
+                if (respuesta.success && respuesta.data) {
+                    const conteoPorFecha = respuesta.data.reduce((acumulador: any, caso: any) => {
+                        // Pillamos el nombre de la enfermedad (si viene vacío, le ponemos 'Desconocida')
+                        const fecha = caso.fechacaso || null;
+
+                        // Si ya la hemos visto, le sumamos 1. Si es la primera vez, la empezamos en 1.
+                        acumulador[fecha] = (acumulador[fecha] || 0) + 1;
+
+                        return acumulador;
+                    }, {});
+
+                    const datosParaGrafica = Object.keys(conteoPorFecha).map(clave => ({
+                        fecha: clave,
+                        numero: conteoPorFecha[clave]
+                    }));
+
+                    setOptions((opcionesPrevias) => ({
+                        ...opcionesPrevias,
+                        data: datosParaGrafica,
+                    }));
+                    console.log("Datos cargados para el gráfico de barras de casos:", datosParaGrafica);
+                } else {
+                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos de monitoreo:", error);
+            }
+        };
+
+        cargarDatos();
+    }, []);
+
+    return <AgCharts options={options} />;
+};
+
+const ChartCasosPieHumanos = () => {
+    const [options, setOptions] = useState<AgChartOptions>({
+        title: {
+            text: "Casos registrados por enfermedad",
+        },
+        subtitle: {
+            text: " ",
+        },
+        data: [],
+        series: [
+            {
+                type: "pie",
+                angleKey: "numero",
+                legendItemKey: "enfermedad",
+            },
+        ],
+    });
+
+    useEffect(() => {
+        const cargarDatos = async () => {
+            try {
+                const respuesta = await getDatosHumanos();
+
+                if (respuesta.success && respuesta.data) {
+                    const conteoPorEnfermedad = respuesta.data.reduce((acumulador: any, caso: any) => {
+                        // Pillamos el nombre de la enfermedad (si viene vacío, le ponemos 'Desconocida')
+                        const nombreEnfermedad = caso.enfermedad || 'Desconocida';
+
+                        // Si ya la hemos visto, le sumamos 1. Si es la primera vez, la empezamos en 1.
+                        acumulador[nombreEnfermedad] = (acumulador[nombreEnfermedad] || 0) + 1;
+
+                        return acumulador;
+                    }, {});
+
+                    const datosParaGrafica = Object.keys(conteoPorEnfermedad).map(clave => ({
+                        enfermedad: clave,
+                        numero: conteoPorEnfermedad[clave]
+                    }));
+
+                    setOptions((opcionesPrevias) => ({
+                        ...opcionesPrevias,
+                        data: datosParaGrafica,
+                    }));
+                    console.log("Datos cargados para el gráfico:", datosParaGrafica);
+                } else {
+                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos de monitoreo:", error);
+            }
+        };
+
+        cargarDatos();
+    }, []);
+
+    return <AgCharts options={options} />;
+};
+
+const ChartFechasBarraMonitoreo = () => {
+    const [options, setOptions] = useState<AgChartOptions>({
+        title: {
+            text: "Muestras obtenidas por fecha",
+        },
+        subtitle: {
+            text: " ",
+        },
+        data: [],
+        series: [
+            {
+                type: "bar",
+                xKey: "fecha",
+                yKey: "numero",
+                yName: "Número de casos",
+            },
+        ],
+    });
+
+    useEffect(() => {
+        const cargarDatos = async () => {
+            try {
+                const respuesta = await getDatosMontireo();
+
+                // Comprobamos si la respuesta fue exitosa y tiene datos
+                if (respuesta.success && respuesta.data) {
+                    // Actualizamos el estado solo con la propiedad data
+                    setOptions((opcionesPrevias) => ({
+                        ...opcionesPrevias,
+                        data: respuesta.data, // <-- Pasamos el array real aquí
+                    }));
+                    console.log("Datos cargados para el gráfico:", respuesta.data);
+                } else {
+                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos de monitoreo:", error);
+            }
+        };
+
+        cargarDatos();
+    }, []);
+
+    return <AgCharts options={options} />;
+};
+
+const ChartVectoresPieMonitoreo = () => {
+    const [options, setOptions] = useState<AgChartOptions>({
+        title: {
+            text: "Muestras obtenidas por vectores",
+        },
+        subtitle: {
+            text: " ",
+        },
+        data: [],
+        series: [
+            {
+                type: "pie",
+                angleKey: "numero",
+                legendItemKey: "vector",
+            },
+        ],
+    });
+
+    useEffect(() => {
+        const cargarDatos = async () => {
+            try {
+                const respuesta = await getDatosMontireo();
+
+                if (respuesta.success && respuesta.data) {
+                    setOptions((opcionesPrevias) => ({
+                        ...opcionesPrevias,
+                        data: respuesta.data, // <-- Pasamos el array real aquí
+                    }));
+                    console.log("Datos cargados para el gráfico pie de vectores:", respuesta.data);
+                } else {
+                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos de monitoreo:", error);
+            }
+        };
+
+        cargarDatos();
+    }, []);
+
+    return <AgCharts options={options} />;
+};
 
 
 export default function VisualizacionGraficos() {
@@ -22,19 +236,33 @@ export default function VisualizacionGraficos() {
                 </Link>
 
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Gráficos</h1>
-                <p className="text-gray-600">Análisis gráfico de los datos de enfermedades vectoriales</p>
+                <p className="text-gray-600 mb-2">Análisis gráfico de los datos de enfermedades vectoriales</p>
+
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-2">
+                    <div className="p-4 border-b border-gray-100">
+                        <h2 className="text-xl font-bold text-gray-900">Análisis de Casos Humanos</h2>
+                    </div>
+                    <div className="w-full">
+                        <ChartFechaBarrasHumanos />
+                        <ChartCasosPieHumanos />
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-2">
+                    <div className="p-4 border-b border-gray-100">
+                        <h2 className="text-xl font-bold text-gray-900">Análisis de Monitoreo Entomológico</h2>
+                    </div>
+                    <div className="w-full">
+                        <ChartFechasBarraMonitoreo />
+                        <ChartVectoresPieMonitoreo />
+                    </div>
+                </div>
 
                 <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <div className="p-4 border-b border-gray-100">
-                        <h2 className="text-xl font-bold text-gray-900">Monitoreo Entomológico Combinado</h2>
+                        <h2 className="text-xl font-bold text-gray-900">Análisis de Casos Animales</h2>
                     </div>
-                    <div className="w-full h-[3000px]">
-                        <iframe
-                            title="Monitoreo Entomológico - Power BI"
-                            src="https://app.powerbi.com/view?r=eyJrIjoiZDNjYzgyYjMtMGZkNC00Yjc5LWE2OTItNTMxYTY3YTY0ZjhhIiwidCI6IjNmMjI3ZGJhLWYzZjQtNDU0NC1iMzE0LWM2ZWZkMzBlMGQwMCIsImMiOjh9&pageName=db193415704a5ec5920c&navContentPaneEnabled=false&filterPaneEnabled=false"
-                            className="w-full h-full border-0"
-                            allowFullScreen={true}
-                        />
+                    <div className="w-full">
                     </div>
                 </div>
             </div>

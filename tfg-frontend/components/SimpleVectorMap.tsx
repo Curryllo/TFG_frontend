@@ -35,7 +35,7 @@ export default function SimpleVectorMap({ data }: MapVisualizationStrategyProps)
                 <CircleMarker
                     key={i}
                     center={[punto.latitud, punto.longitud]}
-                    pathOptions={{ color: '#f00404', fillColor: '#f00404', fillOpacity: 0.5 }} // Todo naranja
+                    pathOptions={{ color: '#f00404', fillColor: '#f00404', fillOpacity: 0.5 }}
                     radius={Math.max(Math.sqrt(punto.numero) * 4, 5)} 
                 >
                     <Tooltip>{punto.vector} // {punto.numero} casos</Tooltip>

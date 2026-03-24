@@ -173,7 +173,7 @@ export default function MonitoreoForm() {
                     {/* Fecha */}
                     <div>
                         <label htmlFor="fecha" className="block text-sm font-medium text-gray-600 mb-1">
-                            Fecha
+                            Fecha de Recogida
                         </label>
                         <input
                             type="date"

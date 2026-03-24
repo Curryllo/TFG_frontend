@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, UsersRound, Bug, Bone } from 'lucide-react';
+import { ArrowLeft, UsersRound, Bug, PawPrint } from 'lucide-react';
 
 
 export default function RegistrationTypeSelection() {
@@ -54,7 +54,7 @@ export default function RegistrationTypeSelection() {
                     <Link href="/registrar/animales" className="block">
                         <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 flex flex-col items-center gap-4 group hover:-translate-y-1">
                             <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center group-hover:bg-amber-200 transition-colors">
-                                <Bone className="w-10 h-10 text-amber-600" />
+                                <PawPrint className="w-10 h-10 text-amber-600" />
                             </div>
                             <h2 className="text-xl font-semibold text-gray-900">Datos de Animales</h2>
                             <p className="text-gray-600 text-center text-sm">
