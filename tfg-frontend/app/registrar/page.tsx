@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, UsersRound, Bug, PawPrint } from 'lucide-react';
+import { ArrowLeft, UsersRound, Bug, PawPrint, Eye } from 'lucide-react';
 
 
 export default function RegistrationTypeSelection() {
@@ -41,9 +41,9 @@ export default function RegistrationTypeSelection() {
                     <Link href="/registrar/monitoreo" className="block">
                         <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 flex flex-col items-center gap-4 group hover:-translate-y-1">
                             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                                <Bug className="w-10 h-10 text-green-600" />
+                                <Eye className="w-10 h-10 text-green-600" />
                             </div>
-                            <h2 className="text-lg font-semibold text-gray-900 whitespace-nowrap">Monitoreo Entomológico</h2>
+                            <h2 className="text-lg font-semibold text-gray-900 whitespace-nowrap">Vigilancia Entomológica</h2>
                             <p className="text-gray-600 text-center text-sm">
                                 Registrar datos de vigilancia de vectores
                             </p>
@@ -54,9 +54,9 @@ export default function RegistrationTypeSelection() {
                     <Link href="/registrar/animales" className="block">
                         <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 flex flex-col items-center gap-4 group hover:-translate-y-1">
                             <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center group-hover:bg-amber-200 transition-colors">
-                                <PawPrint className="w-10 h-10 text-amber-600" />
+                                <Bug className="w-10 h-10 text-amber-600" />
                             </div>
-                            <h2 className="text-xl font-semibold text-gray-900">Datos de Animales</h2>
+                            <h2 className="text-xl font-semibold text-gray-900">Garrapatas</h2>
                             <p className="text-gray-600 text-center text-sm">
                                 Registrar casos de animales infectados
                             </p>

@@ -44,7 +44,7 @@ export default function MonitoreoForm() {
             )}
 
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Monitoreo Entomológico
+                Vigilancia Entomológica
             </h1>
             <p className="text-gray-600 mb-8">
                 Ingrese datos de vigilancia de vectores
