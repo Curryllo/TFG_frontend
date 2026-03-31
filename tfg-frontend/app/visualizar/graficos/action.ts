@@ -27036,6 +27036,41 @@ export async function getDatosHumanos() {
 
 }
 
+export async function getDatosGarrapatas() {
+    try {
+        const command = new GetObjectCommand({
+            Bucket: "tfg-data-lake",
+            Key: "datosLimpiosGarrapatas.csv",
+        });
+
+        const response = await s3Client.send(command);
+        const str = await response.Body?.transformToString();
+
+        if (!str) throw new Error("Archivo CSV vacío o no encontrado");
+
+        const parsed = Papa.parse(str, {
+            header: true, // Usa la primera fila como claves del JSON
+            dynamicTyping: true, // Convierte números automáticamente
+            skipEmptyLines: true,
+        });
+
+
+        const datosLimpios = parsed.data.map((item: any) => ({
+            municipioRecogida: item.municipiorecogida || 'Desconocido',
+            especie: item.especie || 'Desconicida',
+            fechaRecogida: item.fecharecogida ? item.fecharecogida.split(' ')[0].split('T')[0] : '',
+            enHumano: item.enhumano || 'No',
+            enAnimal: item.enanimal || 'Desconocido'
+        }));
+
+        return { success: true, data: datosLimpios };
+
+    } catch (error) {
+        console.error("Error leyendo de MinIO:", error);
+        return { success: false, data: [] };
+    }
+}
+
 
 
 

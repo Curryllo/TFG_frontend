@@ -6,8 +6,34 @@ import { useState, useActionState, useEffect } from "react";
 export default function AnimalesForm() {
     const [state, formAction, isPending] = useActionState(postGarrapatas, null);
 
+    const [mostrarPopUp, setMostrarPopUp] = useState(false);
+
+    useEffect(() => {
+        if (state?.success) {
+            setMostrarPopUp(true);
+
+            const timer = setTimeout(() => {
+                setMostrarPopUp(false);
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [state]);
+
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
+            
+            {mostrarPopUp && (
+                <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    <div className="bg-teal-600 text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 border-2 border-teal-400">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-bold">¡Registro realizado con éxito!</span>
+                    </div>
+                </div>
+            )}
+
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Garrapatas
             </h1>
