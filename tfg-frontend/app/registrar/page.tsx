@@ -51,7 +51,7 @@ export default function RegistrationTypeSelection() {
                     </Link>
 
                     {/* Botón de animales */}
-                    <Link href="/registrar/animales" className="block">
+                    <Link href="/registrar/garrapatas" className="block">
                         <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 flex flex-col items-center gap-4 group hover:-translate-y-1">
                             <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center group-hover:bg-amber-200 transition-colors">
                                 <Bug className="w-10 h-10 text-amber-600" />

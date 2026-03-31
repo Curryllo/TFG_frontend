@@ -1,4 +1,11 @@
+'use client';
+
+import { postGarrapatas } from "@/app/registrar/(registros)/garrapatas/actions";
+import { useState, useActionState, useEffect } from "react";
+
 export default function AnimalesForm() {
+    const [state, formAction, isPending] = useActionState(postGarrapatas, null);
+
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -8,7 +15,7 @@ export default function AnimalesForm() {
                 Ingrese los detalles de la garrapata que desea registrar
             </p>
 
-            <form className="space-y-4">
+            <form className="space-y-4" action={formAction}>
                 <div className="flex flex-row gap-6">
                     <div>
                         <label htmlFor="municipio" className="block text-sm font-medium text-gray-600 mb-1">
@@ -100,6 +107,15 @@ export default function AnimalesForm() {
                             </select>
                         </div>
                     </div>
+                </div>
+
+                <div className="pt-4 flex justify-end">
+                    <button
+                        type="submit"
+                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Guardar Registro
+                    </button>
                 </div>
             </form >
         </div >
