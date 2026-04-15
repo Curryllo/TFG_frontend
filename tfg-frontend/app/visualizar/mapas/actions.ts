@@ -13,11 +13,11 @@ const s3Client = new S3Client({
     forcePathStyle: true,
 });
 
-export async function getDatosMinio() {
+export async function getDatosHumanosMinio() {
     try {
         const command = new GetObjectCommand({
             Bucket: "tfg-data-lake", // El nombre de tu bucket
-            Key: "datosLimpios.csv", // El nombre del archivo de tu ETL
+            Key: "datosLimpiosHumanos.csv", // El nombre del archivo de tu ETL
         });
 
         const response = await s3Client.send(command);
@@ -44,15 +44,16 @@ export async function getDatosMinio() {
 
         // Mapeamos para asegurar la estructura (ajusta los nombres según tu CSV real)
         const datosLimpios = parsed.data.map((item: any) => ({
-            latitud: parseCoordenada(item.latitud),
-            longitud: parseCoordenada(item.longitud),
-            numero: item.numero || 1,
-            genero: item.genero || null,
-            vector: item.vector || 'Desconocido',
+            sexo: item.sexo || null,
+            edad: item.edad || null,
+            enfermedad: item.enfermedad || 'Desconocida',
+            provincia: item.provincia || 'Desconocida',
+            municipio: item.municipio || 'Desconocido',
+            defuncion: item.defuncion === 'true' || item.defuncion === true,
+            hospitalizado: item.hospitalizado === 'true' || item.hospitalizado === true,
             fecha: item.fecha || '',
-            lugarRecogida: item.lugarRecogida || 'Desconocido'
+            pais: item.pais || 'Desconocido',
         }));
-
         return { success: true, data: datosLimpios };
     } catch (error) {
         console.error("Error leyendo de MinIO:", error);

@@ -1,16 +1,24 @@
 'use client'
 import { postMonitoreo } from "@/app/registrar/(registros)/monitoreo/action";
 import { useState, useActionState, useEffect } from "react";
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation';
+import { peticionAutenticada } from '@/services/api';
 
 export default function MonitoreoForm() {
-    const [state, formAction, isPending] = useActionState(postMonitoreo, null);
+    //const [state, formAction, isPending] = useActionState(postMonitoreo, null);
 
+    const router = useRouter();
+    const [estado, setEstado] = useState({ cargando: false, error: "" });
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
+
+    //const token = useAuthStore((state) => state.token);
 
     const [lugar, setLugar] = useState('');
     const [latitud, setLatitud] = useState('');
     const [longitud, setLongitud] = useState('');
 
+    /*
     useEffect(() => {
         if (state?.success) {
             setMostrarPopUp(true);
@@ -26,6 +34,46 @@ export default function MonitoreoForm() {
             return () => clearTimeout(timer);
         }
     }, [state]);
+    */
+
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setEstado({ cargando: true, error: "" });
+
+        const formData = new FormData(e.currentTarget);
+
+        // 1. Preparamos el objeto con los datos del formulario
+        const datosMonitoreo = {
+            lugarRecogida: formData.get('lugar'),
+            latitud: formData.get('latitud') ? Number(formData.get('latitud')) : null,
+            longitud: formData.get('longitud') ? Number(formData.get('longitud')) : null,
+            vector: formData.get('vector'),
+            enfermedad: formData.get('enfermedad'),
+            genero: formData.get('genero'),
+            fecha: formData.get('fecha'),
+            numero: formData.get('numero') ? Number(formData.get('numero')) : null
+        };
+
+        try {
+            // 2. USAMOS LA MAGIA: Si el token de 1 min ha caducado, 
+            // esta función lo refrescará antes de enviar los datos.
+            const response = await peticionAutenticada('/formMonitoreo', {
+                method: 'POST',
+                body: JSON.stringify(datosMonitoreo)
+            });
+
+            if (response.ok) {
+                alert("¡Caso humano registrado!");
+                router.refresh(); // Esto equivale al revalidatePath
+            } else {
+                setEstado({ cargando: false, error: `Error ${response.status}` });
+            }
+        } catch (error) {
+            setEstado({ cargando: false, error: "Error de conexión" });
+        }
+    };
+
 
     const isAnyLugar = lugar.length > 0 || (latitud.length > 0 && longitud.length > 0);
 
@@ -50,8 +98,10 @@ export default function MonitoreoForm() {
                 Ingrese datos de vigilancia de vectores
             </p>
 
-            <form className="space-y-6" action={formAction}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/*<input type="hidden" name="accessToken" value={token || ''} />*/}
+
                     {/* Lugar */}
                     <div>
                         <label htmlFor="lugar" className="block text-sm font-medium text-gray-600 mb-1">
@@ -191,6 +241,7 @@ export default function MonitoreoForm() {
                     </p>
                 )}
 
+                {/*
                 <div className="pt-4 flex justify-end">
                     <button
                         type="submit"
@@ -199,6 +250,13 @@ export default function MonitoreoForm() {
                     >
                         Guardar Registro
                     </button>
+                </div>
+                */}
+                <div className="pt-4 flex justify-end">
+                    <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {estado.cargando ? 'Enviando...' : 'Guardar Registro'}
+                    </button>
+                    {estado.error && <p className="text-red-500">{estado.error}</p>}
                 </div>
             </form>
         </div>

@@ -27025,7 +27025,7 @@ export async function getDatosHumanos() {
             provinciaResidencia: item.provinciaresidencia || 'Desconocida',
             municipioResidencia: item.municipioresidencia || 'Desconocida',
             defuncion: item.defuncion || 'No',
-            hospitalizado: item.casohospitalizado || 'Si'
+            hospitalizado: item.casohospitalizado || 'No'
         }));
 
         return { success: true, data: datosLimpios };

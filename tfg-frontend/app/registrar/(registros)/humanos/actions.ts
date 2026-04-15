@@ -2,6 +2,13 @@
 import { revalidatePath } from 'next/cache';
 
 export async function postHumanos(prevState: any, data: FormData) {
+
+    const token = data.get('accessToken');
+
+    if (!token) {
+        return { success: false, message: 'Sesión inválida o expirada. Vuelve a iniciar sesión.' };
+    }
+
     const edad = Number(data.get('edad'));
     const sexo = data.get('sexo');
     const fechaCaso = data.get('fechaCaso');
@@ -19,6 +26,7 @@ export async function postHumanos(prevState: any, data: FormData) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
             edad,

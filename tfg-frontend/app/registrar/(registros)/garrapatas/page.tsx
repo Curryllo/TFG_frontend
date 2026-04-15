@@ -1,13 +1,22 @@
 'use client';
 
-import { postGarrapatas } from "@/app/registrar/(registros)/garrapatas/actions";
+//import { postGarrapatas } from "@/app/registrar/(registros)/garrapatas/actions";
 import { useState, useActionState, useEffect } from "react";
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation';
+import { peticionAutenticada } from '@/services/api';
 
 export default function AnimalesForm() {
-    const [state, formAction, isPending] = useActionState(postGarrapatas, null);
+    //const [state, formAction, isPending] = useActionState(postGarrapatas, null);
 
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
+    const router = useRouter();
+    const [estado, setEstado] = useState({ cargando: false, error: "" });
+
+    //const token = useAuthStore((state) => state.token);
+
+    /*
     useEffect(() => {
         if (state?.success) {
             setMostrarPopUp(true);
@@ -19,10 +28,45 @@ export default function AnimalesForm() {
             return () => clearTimeout(timer);
         }
     }, [state]);
+    */
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setEstado({ cargando: true, error: "" });
+
+        const formData = new FormData(e.currentTarget);
+
+        // 1. Preparamos el objeto con los datos del formulario
+        const datosGarrapatas = {
+            municipio: formData.get('municipio'),
+            especie: formData.get('especie'),
+            fecha: formData.get('fechaRecogida'),
+            enHumano: formData.get('enHumano') === 'on',
+            animal: formData.get('enAnimal')
+        };
+
+        try {
+            // 2. USAMOS LA MAGIA: Si el token de 1 min ha caducado, 
+            // esta función lo refrescará antes de enviar los datos.
+            const response = await peticionAutenticada('/formGarrapatas', {
+                method: 'POST',
+                body: JSON.stringify(datosGarrapatas)
+            });
+
+            if (response.ok) {
+                alert("¡Caso humano registrado!");
+                router.refresh(); // Esto equivale al revalidatePath
+            } else {
+                setEstado({ cargando: false, error: `Error ${response.status}` });
+            }
+        } catch (error) {
+            setEstado({ cargando: false, error: "Error de conexión" });
+        }
+    };
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
-            
+
             {mostrarPopUp && (
                 <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
                     <div className="bg-teal-600 text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 border-2 border-teal-400">
@@ -41,8 +85,10 @@ export default function AnimalesForm() {
                 Ingrese los detalles de la garrapata que desea registrar
             </p>
 
-            <form className="space-y-4" action={formAction}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="flex flex-row gap-6">
+                    {/*<input type="hidden" name="accessToken" value={token || ''} />*/}
+
                     <div>
                         <label htmlFor="municipio" className="block text-sm font-medium text-gray-600 mb-1">
                             Municipio *
@@ -135,6 +181,7 @@ export default function AnimalesForm() {
                     </div>
                 </div>
 
+                {/*
                 <div className="pt-4 flex justify-end">
                     <button
                         type="submit"
@@ -142,6 +189,13 @@ export default function AnimalesForm() {
                     >
                         Guardar Registro
                     </button>
+                </div>
+                */}
+                <div className="pt-4 flex justify-end">
+                    <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {estado.cargando ? 'Enviando...' : 'Guardar Registro'}
+                    </button>
+                    {estado.error && <p className="text-red-500">{estado.error}</p>}
                 </div>
             </form >
         </div >

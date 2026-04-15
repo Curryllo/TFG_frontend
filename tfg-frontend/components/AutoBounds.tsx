@@ -2,9 +2,9 @@
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { DatoVector } from '@/types/map'; // Ajusta la ruta a tu interfaz
+import { DatoVectorHumano } from '@/types/map'; // Ajusta la ruta a tu interfaz
 
-export default function AutoBounds({ data }: { data: DatoVector[] }) {
+export default function AutoBounds({ data }: { data: DatoVectorHumano[] }) {
     const map = useMap(); // Obtenemos la instancia real de Leaflet
 
     useEffect(() => {

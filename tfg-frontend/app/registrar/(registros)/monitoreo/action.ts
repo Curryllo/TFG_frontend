@@ -1,6 +1,13 @@
 'use server'
 
 export async function postMonitoreo(prevState: any, data: FormData) {
+
+    const token = data.get('accessToken');
+
+    if (!token) {
+        return { success: false, message: 'Sesión inválida o expirada. Vuelve a iniciar sesión.' };
+    }
+
     const lugarRecogida = data.get('lugar');
     const latitud = data.get('latitud') ? Number(data.get('latitud')) : null;
     const longitud = data.get('longitud') ? Number(data.get('longitud')) : null;
@@ -15,6 +22,7 @@ export async function postMonitoreo(prevState: any, data: FormData) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
             lugarRecogida,

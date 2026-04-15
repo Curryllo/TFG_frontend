@@ -1,14 +1,23 @@
 'use client';
 
-import { postHumanos } from "@/app/registrar/(registros)/humanos/actions";
+//import { postHumanos } from "@/app/registrar/(registros)/humanos/actions";
 import { useState, useActionState, useEffect } from "react";
+import { useAuthStore } from '@/store/authStore';
+import { peticionAutenticada } from '@/services/api';
+import { useRouter } from 'next/navigation';
 
 export default function HumanosForm() {
 
-    const [state, formAction, isPending] = useActionState(postHumanos, null);
+    const router = useRouter();
+    const [estado, setEstado] = useState({ cargando: false, error: "" });
+
+    //const [state, formAction, isPending] = useActionState(postHumanos, null);
 
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
+    //const token = useAuthStore((state) => state.token);
+
+    /*
     useEffect(() => {
         if (state?.success) {
             setMostrarPopUp(true);
@@ -20,6 +29,46 @@ export default function HumanosForm() {
             return () => clearTimeout(timer);
         }
     }, [state]);
+
+    */
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setEstado({ cargando: true, error: "" });
+
+        const formData = new FormData(e.currentTarget);
+
+        // 1. Preparamos el objeto con los datos del formulario
+        const datosHumanos = {
+            edad: Number(formData.get('edad')),
+            sexo: formData.get('sexo'),
+            fechaCaso: formData.get('fechaCaso'),
+            enfermedad: formData.get('enfermedad'),
+            pais: formData.get('pais'),
+            provinciaResidencia: formData.get('provinciaResidencia'),
+            municipioResidencia: formData.get('municipioResidencia'),
+            defuncion: formData.get('defuncion') === 'on',
+            casoHospitalizado: formData.get('casoHospitalizado') === 'on',
+        };
+
+        try {
+            // 2. USAMOS LA MAGIA: Si el token de 1 min ha caducado, 
+            // esta función lo refrescará antes de enviar los datos.
+            const response = await peticionAutenticada('/formHumanos', {
+                method: 'POST',
+                body: JSON.stringify(datosHumanos)
+            });
+
+            if (response.ok) {
+                alert("¡Caso humano registrado!");
+                router.refresh(); // Esto equivale al revalidatePath
+            } else {
+                setEstado({ cargando: false, error: `Error ${response.status}` });
+            }
+        } catch (error) {
+            setEstado({ cargando: false, error: "Error de conexión" });
+        }
+    };
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-8">
@@ -41,8 +90,10 @@ export default function HumanosForm() {
                 Ingrese los detalles del caso de enfermedad en humano
             </p>
 
-            <form className="space-y-6" action={formAction}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/*<input type="hidden" name="accessToken" value={token || ''} />*/}
+
                     {/* Edad */}
                     <div>
                         <label htmlFor="edad" className="block text-sm font-medium text-gray-600 mb-1">
@@ -185,6 +236,7 @@ export default function HumanosForm() {
                     </label>
                 </div>
 
+                {/*
                 <div className="pt-4 flex justify-end">
                     <button
                         type="submit"
@@ -192,6 +244,13 @@ export default function HumanosForm() {
                     >
                         Guardar Registro
                     </button>
+                </div>
+                */}
+                <div className="pt-4 flex justify-end">
+                    <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {estado.cargando ? 'Enviando...' : 'Guardar Registro'}
+                    </button>
+                    {estado.error && <p className="text-red-500">{estado.error}</p>}
                 </div>
             </form>
         </div>

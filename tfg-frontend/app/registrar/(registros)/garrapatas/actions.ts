@@ -3,6 +3,12 @@ import { revalidatePath } from 'next/cache';
 
 export async function postGarrapatas(prevState: any, data: FormData) {
     console.log('Datos a enviar: ', data);
+
+    const token = data.get('accessToken');
+
+    if (!token) {
+        return { success: false, message: 'Sesión inválida o expirada. Vuelve a iniciar sesión.' };
+    }
     
     const municipio = data.get('municipio');
     const especie = data.get('especie');
@@ -14,6 +20,7 @@ export async function postGarrapatas(prevState: any, data: FormData) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
             municipio,

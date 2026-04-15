@@ -6,6 +6,7 @@ import { getDatosMontireo, getDatosHumanos, getDatosGarrapatas } from "@/app/vis
 import { AgCharts } from "ag-charts-react";
 import { useState, useEffect } from "react";
 import { AgChartOptions } from "ag-charts-community";
+import ChartGravedadEdad from "@/components/ChartGravedadEdad";
 import {
     BarSeriesModule,
     CategoryAxisModule,
@@ -17,10 +18,16 @@ import {
 
 ModuleRegistry.registerModules([BarSeriesModule, CategoryAxisModule, LegendModule, NumberAxisModule, PieSeriesModule]);
 
-const ChartFechaBarrasHumanos = () => {
+
+const ChartPaisesBarrasHumanos = () => {
+
+    const [datosCrudos, setDatosCrudos] = useState<any[]>([]);
+    const [enfermedades, setEnfermedades] = useState<string[]>([]);
+    const [enfermedadSeleccionada, setEnfermedadSeleccionada] = useState<string>('Todas');
+
     const [options, setOptions] = useState<AgChartOptions>({
         title: {
-            text: "Casos registrados por fecha",
+            text: "Casos registrados por pais",
         },
         subtitle: {
             text: " ",
@@ -29,7 +36,7 @@ const ChartFechaBarrasHumanos = () => {
         series: [
             {
                 type: "bar",
-                xKey: "fecha",
+                xKey: "pais",
                 yKey: "numero",
                 yName: "Número de casos",
             },
@@ -42,26 +49,14 @@ const ChartFechaBarrasHumanos = () => {
                 const respuesta = await getDatosHumanos();
 
                 if (respuesta.success && respuesta.data) {
-                    const conteoPorFecha = respuesta.data.reduce((acumulador: any, caso: any) => {
-                        // Pillamos el nombre de la enfermedad (si viene vacío, le ponemos 'Desconocida')
-                        const fecha = caso.fechacaso || null;
+                    setDatosCrudos(respuesta.data);
 
-                        // Si ya la hemos visto, le sumamos 1. Si es la primera vez, la empezamos en 1.
-                        acumulador[fecha] = (acumulador[fecha] || 0) + 1;
+                    const listaEnfermedades = respuesta.data.map((caso: any) => caso.enfermedad || 'Desconocida');
+                    const enfermedadesUnicas = Array.from(new Set(listaEnfermedades)) as string[];
+                    setEnfermedades(enfermedadesUnicas);
 
-                        return acumulador;
-                    }, {});
+                    console.log("Enfermedades cargadas de forma única:", enfermedadesUnicas);
 
-                    const datosParaGrafica = Object.keys(conteoPorFecha).map(clave => ({
-                        fecha: clave,
-                        numero: conteoPorFecha[clave]
-                    }));
-
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: datosParaGrafica,
-                    }));
-                    console.log("Datos cargados para el gráfico de barras de casos:", datosParaGrafica);
                 } else {
                     console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
                 }
@@ -73,23 +68,80 @@ const ChartFechaBarrasHumanos = () => {
         cargarDatos();
     }, []);
 
-    return <AgCharts options={options} />;
+    useEffect(() => {
+        if (datosCrudos.length === 0) return;
+
+        const datosFiltrados = enfermedadSeleccionada === 'Todas'
+            ? datosCrudos
+            : datosCrudos.filter(caso => (caso.enfermedad || 'Desconocida') === enfermedadSeleccionada);
+
+        const conteoPorPais = datosFiltrados.reduce((acumulador: any, caso: any) => {
+            const pais = caso.pais || 'Desconocido';
+            acumulador[pais] = (acumulador[pais] || 0) + 1;
+            return acumulador;
+        }, {});
+
+        const datosParaGrafica = Object.keys(conteoPorPais).map(clave => ({
+            pais: clave,
+            numero: conteoPorPais[clave]
+        }));
+
+        setOptions((opcionesPrevias) => ({
+            ...opcionesPrevias,
+            data: datosParaGrafica,
+            title: {
+                text: enfermedadSeleccionada === 'Todas'
+                    ? "Casos totales registrados por país"
+                    : `Casos de ${enfermedadSeleccionada.trim()} por país`
+            }
+        }));
+
+    }, [datosCrudos, enfermedadSeleccionada]);
+
+    return (
+        <div className="flex flex-col gap-4 w-full">
+            <div className="px-4 pt-4 flex items-center gap-3">
+                <label htmlFor="selector-enfermedad" className="font-semibold text-gray-700">
+                    Filtrar por enfermedad:
+                </label>
+                <select
+                    id="selector-enfermedad"
+                    value={enfermedadSeleccionada}
+                    onChange={(e) => setEnfermedadSeleccionada(e.target.value)}
+                    className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-800"
+                >
+                    <option value="Todas">Todas las enfermedades</option>
+                    {enfermedades.map((enf) => (
+                        <option key={enf} value={enf}>
+                            {enf}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <AgCharts options={options} />
+        </div>
+    );
 };
 
-const ChartCasosPieHumanos = () => {
+const ChartOrigenPieHumanos = () => {
+    const [datosCrudos, setDatosCrudos] = useState<any[]>([]);
+    const [enfermedades, setEnfermedades] = useState<string[]>([]);
+    const [enfermedadSeleccionada, setEnfermedadSeleccionada] = useState<string>('Todas');
+
+
     const [options, setOptions] = useState<AgChartOptions>({
         title: {
-            text: "Casos registrados por enfermedad",
+            text: "Origen de los casos registrados",
         },
         subtitle: {
-            text: " ",
+            text: "Autóctonos (España) vs Importados",
         },
         data: [],
         series: [
             {
                 type: "pie",
                 angleKey: "numero",
-                legendItemKey: "enfermedad",
+                legendItemKey: "origen",
             },
         ],
     });
@@ -100,26 +152,14 @@ const ChartCasosPieHumanos = () => {
                 const respuesta = await getDatosHumanos();
 
                 if (respuesta.success && respuesta.data) {
-                    const conteoPorEnfermedad = respuesta.data.reduce((acumulador: any, caso: any) => {
-                        // Pillamos el nombre de la enfermedad (si viene vacío, le ponemos 'Desconocida')
-                        const nombreEnfermedad = caso.enfermedad || 'Desconocida';
+                    setDatosCrudos(respuesta.data);
 
-                        // Si ya la hemos visto, le sumamos 1. Si es la primera vez, la empezamos en 1.
-                        acumulador[nombreEnfermedad] = (acumulador[nombreEnfermedad] || 0) + 1;
+                    const listaEnfermedades = respuesta.data.map((caso: any) => caso.enfermedad || 'Desconocida');
+                    const enfermedadesUnicas = Array.from(new Set(listaEnfermedades)) as string[];
+                    setEnfermedades(enfermedadesUnicas);
 
-                        return acumulador;
-                    }, {});
+                    console.log("Enfermedades cargadas de forma única:", enfermedadesUnicas);
 
-                    const datosParaGrafica = Object.keys(conteoPorEnfermedad).map(clave => ({
-                        enfermedad: clave,
-                        numero: conteoPorEnfermedad[clave]
-                    }));
-
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: datosParaGrafica,
-                    }));
-                    console.log("Datos cargados para el gráfico:", datosParaGrafica);
                 } else {
                     console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
                 }
@@ -131,8 +171,62 @@ const ChartCasosPieHumanos = () => {
         cargarDatos();
     }, []);
 
-    return <AgCharts options={options} />;
+    useEffect(() => {
+        if (datosCrudos.length === 0) return;
+
+        const datosFiltrados = enfermedadSeleccionada === 'Todas'
+            ? datosCrudos
+            : datosCrudos.filter(caso => (caso.enfermedad || 'Desconocida') === enfermedadSeleccionada);
+
+        const conteoOrigen = datosFiltrados.reduce((acumulador: any, caso: any) => {
+            // Limpiamos espacios y verificamos si es España
+            const paisLimpio = caso.pais ? caso.pais.trim() : "";
+            const categoria = paisLimpio === "España" ? "Autóctono" : "Importado";
+
+            // Sumamos al contador de esa categoría
+            acumulador[categoria] = (acumulador[categoria] || 0) + 1;
+
+            return acumulador;
+        }, {});
+
+
+        const datosParaGrafica = Object.keys(conteoOrigen).map(clave => ({
+            origen: clave,
+            numero: conteoOrigen[clave]
+        }));
+
+        setOptions((opcionesPrevias) => ({
+            ...opcionesPrevias,
+            data: datosParaGrafica
+        }));
+
+    }, [datosCrudos, enfermedadSeleccionada]);
+
+    return (
+        <div className="flex flex-col gap-4 w-full">
+            <div className="px-4 pt-4 flex items-center gap-3">
+                <label htmlFor="selector-enfermedad" className="font-semibold text-gray-700">
+                    Filtrar por enfermedad:
+                </label>
+                <select
+                    id="selector-enfermedad"
+                    value={enfermedadSeleccionada}
+                    onChange={(e) => setEnfermedadSeleccionada(e.target.value)}
+                    className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-800"
+                >
+                    <option value="Todas">Todas las enfermedades</option>
+                    {enfermedades.map((enf) => (
+                        <option key={enf} value={enf}>
+                            {enf}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <AgCharts options={options} />
+        </div>
+    );
 };
+
 
 const ChartFechasBarraMonitoreo = () => {
     const [options, setOptions] = useState<AgChartOptions>({
@@ -358,9 +452,12 @@ export default function VisualizacionGraficos() {
                     <div className="p-4 border-b border-gray-100">
                         <h2 className="text-xl font-bold text-gray-900">Análisis de Casos Humanos</h2>
                     </div>
-                    <div className="w-full">
-                        <ChartFechaBarrasHumanos />
-                        <ChartCasosPieHumanos />
+                    <div className="p-4 border-b w-full">
+                        <h3 className="text-lg font-bold text-gray-900">Número de casos por países</h3>
+                        <ChartPaisesBarrasHumanos />
+                        <h3 className="text-lg font-bold text-gray-900">Origen de los casos</h3>
+                        <ChartOrigenPieHumanos />
+                        <ChartGravedadEdad />
                     </div>
                 </div>
 

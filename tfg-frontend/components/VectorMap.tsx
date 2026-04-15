@@ -3,19 +3,20 @@
 import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-interface DatoVector {
+interface DatoVectorHumano {
+    edad: number;
+    sexo: string;
     fecha: Date;
     enfermedad: string;
-    vector: string;
-    casos: number;
-    latitud: number;
-    longitud: number;
-    lugar: string;
-    sexo: string;
+    pais: string;
+    provincia: string;
+    municipio: string;
+    defuncion: boolean;
+    hospitalizado: boolean;
 }
 
 interface VectorMapProps {
-    data: DatoVector[];
+    data: DatoVectorHumano[];
 }
 
 export default function VectorMap({ data }: VectorMapProps) {

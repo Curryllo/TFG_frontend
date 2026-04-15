@@ -3,8 +3,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { DatoVector } from '@/types/map';
-import { getDatosMinio } from './actions';
+import { DatoVectorHumano } from '@/types/map';
+import { getDatosHumanosMinio } from './actions';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const GenderMapStrategy = dynamic(() => import('@/components/GeneroVectorMap'), 
 
 export default function VisualizacionMapas() {
     // Estados para los datos y carga
-    const [datosBrutos, setDatosBrutos] = useState<DatoVector[]>([]);
+    const [datosBrutos, setDatosBrutos] = useState<DatoVectorHumano[]>([]);
     const [cargando, setCargando] = useState(true);
 
     // Estados para los filtros y la estrategia elegida
@@ -23,22 +23,22 @@ export default function VisualizacionMapas() {
 
     // Cargar datos de MinIO al montar la página
     useEffect(() => {
-        getDatosMinio().then(res => {
+        getDatosHumanosMinio().then(res => {
             if (res.success) setDatosBrutos(res.data);
             setCargando(false);
         });
     }, []);
 
     // Extraer lista única de vectores para llenar el <select>
-    const vectoresDisponibles = useMemo(() => {
-        const unicos = new Set(datosBrutos.map(d => d.vector));
+    const enfermedadesDisponibles = useMemo(() => {
+        const unicos = new Set(datosBrutos.map(d => d.enfermedad));
         return ['Todos', ...Array.from(unicos)];
     }, [datosBrutos]);
 
     // Aplicar el filtro de vector
     const datosFiltrados = useMemo(() => {
         if (filtroVector === 'Todos') return datosBrutos;
-        return datosBrutos.filter(d => d.vector === filtroVector);
+        return datosBrutos.filter(d => d.enfermedad === filtroVector);
     }, [datosBrutos, filtroVector]);
 
     // SELECCIÓN DE LA ESTRATEGIA (PATRÓN STRATEGY)
@@ -53,7 +53,7 @@ export default function VisualizacionMapas() {
                         Volver atrás
                     </div>
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900">Análisis Vectorial (MinIO Data Lake)</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Análisis Vectorial</h1>
 
                 {/* PANEL DE FILTROS */}
                 <div className="bg-white p-4 rounded-xl shadow border flex gap-6">
@@ -64,7 +64,7 @@ export default function VisualizacionMapas() {
                             onChange={(e) => setFiltroVector(e.target.value)}
                             className="border rounded px-3 py-2 bg-gray-50 text-gray-600"
                         >
-                            {vectoresDisponibles.map(v => <option key={v} value={v}>{v}</option>)}
+                            {enfermedadesDisponibles.map(v => <option key={v} value={v}>{v}</option>)}
                         </select>
                     </div>
 

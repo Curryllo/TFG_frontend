@@ -1,14 +1,14 @@
 'use client'
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapVisualizationStrategyProps, DatoVector } from '@/types/map';
+import { MapVisualizationStrategyProps, DatoVectorHumano } from '@/types/map';
 import AutoBounds from '@/components/AutoBounds';
 import { useMemo } from 'react';
 
 export default function SimpleVectorMap({ data }: MapVisualizationStrategyProps) {
     const datosAgrupados = useMemo(() => {
         // Usamos un diccionario (objeto) para agrupar
-        const agrupacion: Record<string, DatoVector> = {};
+        const agrupacion: Record<string, DatoVectorHumano> = {};
 
         data.filter(p => p.latitud !== 0 && p.longitud !== 0).forEach(punto => {
             // Creamos una clave única combinando la posición y el nombre del vector
