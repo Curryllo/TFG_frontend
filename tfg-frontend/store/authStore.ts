@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 // 1. Definimos qué forma tiene nuestra memoria
 interface AuthState {
@@ -7,11 +8,15 @@ interface AuthState {
     limpiarToken: () => void;       // Función para borrarlo al salir
 }
 
-// 2. Creamos la memoria global
-export const useAuthStore = create<AuthState>((set) => ({
-    token: null, // Estado inicial: no hay token
-    
-    setToken: (nuevoToken) => set({ token: nuevoToken }),
-    
-    limpiarToken: () => set({ token: null }),
-}));
+export const useAuthStore = create<AuthState>()(
+    persist(
+        (set) => ({
+            token: null,
+            setToken: (token) => set({ token }),
+            limpiarToken: () => set({ token: null }),
+        }),
+        {
+            name: 'auth-storage', // clave en localStorage
+        }
+    )
+);
