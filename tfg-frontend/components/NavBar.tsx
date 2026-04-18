@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { cerrarSesion } from '@/app/actions/auth';
 import { LogOut } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { jwtDecode } from 'jwt-decode';
+import { useMemo } from 'react';
 
 export default function NavBar() {
     const router = useRouter();
@@ -17,15 +19,42 @@ export default function NavBar() {
         }
     };
 
+    const token = useAuthStore((state) => state.token);
+
+    const rol = useMemo(() => {
+        if (!token) return null; // Si no hay token, no hay rol
+
+        try {
+            const tokenDecodificado = jwtDecode(token) as any;
+            return tokenDecodificado.rol;
+
+        } catch (error) {
+            console.error("Error al decodificar el token en el NavBar:", error);
+            return null;
+        }
+    }, [token]);
+
     return (
-        <nav className="w-full bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex items-center justify-end">
-            <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium"
-            >
-                <LogOut className="w-4 h-4" />
-                Cerrar sesión
-            </button>
+        <nav className="w-full bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex items-center justify-end gap-4">
+            {rol === "ROLE_Admin" && (
+                <button
+                    onClick={() => router.push('/solicitudes')}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 text-sm font-medium"
+                >
+                    Gestionar Solicitudes
+                </button>
+            )}
+
+            {token && (
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium"
+                >
+                    <LogOut className="w-4 h-4" />
+                    Cerrar sesión
+                </button>
+            )}
+
         </nav>
     );
 }

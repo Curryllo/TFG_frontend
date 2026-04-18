@@ -109,3 +109,45 @@ export async function refrescarSesionServidor() {
         return { success: false };
     }
 }
+
+export async function postSingIn(prevState: any, data: FormData) {
+    const nombre = data.get('nombre');
+    const apellido1 = data.get('apellido1');
+    const apellido2 = data.get('apellido2');
+    const puesto = data.get('puesto');
+    const email = data.get('email') as string;
+
+    const dominiosValidos = ['@salud.aragon.es', '@aragon.es', '@unizar.es'];
+    const esValido = dominiosValidos.some(dominio => email.endsWith(dominio));
+
+    if (!esValido) {
+        return {
+            success: false,
+            message: "Por favor, usa un correo corporativo válido (@salud.aragon.es, @aragon.es o @unizar.es)."
+        };
+    }
+
+    const rolForm = data.get('rol');
+    let rol = "";
+    if (rolForm === "admin") {
+        rol = "Admin";
+    } else if (rolForm === "usuario") {
+        rol = "User";
+    }
+    const password = data.get('password');
+
+
+    try {
+        await fetch('http://172.31.245.33:8080/api/auth/singIn', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nombre, apellido1, apellido2, puesto, email, rol, password }),
+        });
+    } catch (error) {
+        console.error("No se pudo enviar la solicitud", error);
+    }
+
+    return { success: true };
+}

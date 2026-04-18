@@ -29,7 +29,7 @@ export default function LoginPage() {
                 setToken(result.token);
                 router.refresh();
                 // 4. Redirigimos
-                router.push('/'); 
+                router.push('/');
             } else {
                 setErrorMensaje(result?.message || "Error al iniciar sesión");
                 setCargando(false);
@@ -43,6 +43,9 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+
+
+
                 <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
                     Iniciar sesión
                 </h1>
@@ -84,7 +87,15 @@ export default function LoginPage() {
                         <p className="text-red-500 text-sm font-semibold text-center">{errorMensaje}</p>
                     )}
 
-                    <div className="pt-4 flex justify-end">
+                    <div className="pt-4 flex justify-end gap-17">
+                        <button
+                            type="button"
+                            onClick={() => router.push('/singin')}
+                            className="px-6 py-3 bg-blue-300 hover:bg-blue-400 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
+                        >
+                            Solicitar Registro
+                        </button>
+
                         <button
                             type="submit"
                             disabled={cargando}
