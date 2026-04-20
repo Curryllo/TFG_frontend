@@ -1,8 +1,51 @@
+'use client'
+
 import Link from 'next/link';
-import { BarChart3, ArrowLeft, Map } from 'lucide-react';
+import { BarChart3, ArrowLeft, Map, Download } from 'lucide-react';
+import { peticionAutenticada } from '@/services/api';
 
 export default function DataVisualization() {
 
+    const handleDescarga = async () => {
+        // 1. Definimos los archivos que queremos descargar
+        const archivos = ['datosLimpios.csv', 'datosLimpiosGarrapatas.csv', 'datosLimpiosHumanos.csv'];
+
+        try {
+            // 2. Usamos un bucle for...of (es importante usar este y no forEach 
+            // para que respete los await)
+            for (const archivo of archivos) {
+
+                // Pedimos la URL para este archivo en concreto
+                const response = await peticionAutenticada(`/descargaDatos/csv?archivo=${archivo}`, {
+                    method: 'GET'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.url) {
+                        // Forzamos la descarga
+                        const a = document.createElement('a');
+                        a.href = data.url;
+                        a.download = archivo; // Le ponemos su nombre real
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+
+                        // VITAL: Hacemos una micropausa de medio segundo entre descargas
+                        // Esto evita que el navegador colapse o bloquee las descargas por "spam"
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                } else {
+                    console.error(`No se pudo generar el enlace para ${archivo}`);
+                }
+            }
+
+        } catch (error) {
+            console.error("Error en el proceso de descarga:", error);
+            alert("Hubo un error al intentar descargar los archivos");
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4">
@@ -14,13 +57,21 @@ export default function DataVisualization() {
                     </div>
                 </Link>
 
-                <div className="text-center mb-12">
+                <div className="flex flex-col items-center text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-3">
                         Visualización de Datos
                     </h1>
                     <p className="text-gray-600 text-lg">
                         Seleccione el tipo de visualización
                     </p>
+
+                    <button
+                        onClick={handleDescarga}
+                        className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium mt-2"
+                    >
+                        <Download className="w-4 h-4" />
+                        Descargar CSVs
+                    </button>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
