@@ -45,6 +45,15 @@ export default function NavBar() {
                 </button>
             )}
 
+            {rol === "ROLE_Admin" && (
+                <button
+                    onClick={() => router.push('/usuarios')}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 text-sm font-medium"
+                >
+                    Usuarios Activos
+                </button>
+            )}
+    
             {token && (
                 <button
                     onClick={handleLogout}
