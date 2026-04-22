@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { getDatosHumanos } from '../graficos/action';
+import { getDatosHumanos } from "@/app/visualizar/actions";
 
 
 const PaisMapStrategy = dynamic(() => import('@/components/PaisHumanosMap'), { ssr: false });

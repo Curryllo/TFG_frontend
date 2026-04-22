@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AgCharts } from 'ag-charts-react';
 import { AgChartOptions } from 'ag-charts-community';
-import { getDatosHumanos } from "@/app/visualizar/graficos/action";
+import { getDatosHumanos } from "@/app/visualizar/actions";
 
 const ChartOrigenPieCasos = () => {
     const [datosCrudos, setDatosCrudos] = useState<any[]>([]);

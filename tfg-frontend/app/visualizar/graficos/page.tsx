@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { getDatosMontireo, getDatosHumanos, getDatosGarrapatas } from "@/app/visualizar/graficos/action";
+import { getDatosMontireo, getDatosHumanos, getDatosGarrapatas } from "@/app/visualizar/actions";
 import { AgCharts } from "ag-charts-react";
 import { useState, useEffect } from "react";
 import { AgChartOptions } from "ag-charts-community";
