@@ -10,6 +10,7 @@ import ChartGravedadEdad from "@/components/ChartBarrasEdadCasos";
 import ChartRelacionAñoSexoCasos from "@/components/ChartRelacionAñoSexoCasos";
 import ChartPaisesBarrasCasos from "@/components/ChartPaisesBarrasCasos";
 import ChartOrigenPieCasos from "@/components/ChartOrigenPieCasos";
+import ChartBarrasEdadPorEnfermedad from '@/components/ChartBarrasEdadCasosPorEnfermedad';
 import {
     BarSeriesModule,
     CategoryAxisModule,
@@ -361,6 +362,7 @@ export default function VisualizacionGraficos() {
                         <ChartOrigenPieCasos />
                         <h3 className="text-lg font-bold text-gray-900">Grupos de edad</h3>
                         <ChartGravedadEdad />
+                        <ChartBarrasEdadPorEnfermedad />
                         <h3 className="text-lg font-bold text-gray-900">Relación Año-Sexo</h3>
                         <ChartRelacionAñoSexoCasos />
                     </div>

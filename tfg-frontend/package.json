@@ -11,6 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1011.0",
     "ag-charts-react": "^13.1.0",
+    "i18n-iso-countries": "^7.14.0",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.564.0",
