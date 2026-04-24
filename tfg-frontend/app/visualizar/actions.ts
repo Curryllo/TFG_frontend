@@ -47,8 +47,10 @@ export async function getDatosMontireo() {
             genero: item.genero || null,
             vector: item.vector || 'Desconocido',
             fecha: item.fecha ? item.fecha.split(' ')[0].split('T')[0] : '',
-            lugarRecogida: item.lugarRecogida || 'Desconocido'
+            lugarRecogida: item.lugarRecogida || 'Desconocido',
+            enfermedad: item.enfermedad || ''
         }));
+        console.log("Datos monitoreo procesados:", datosLimpios);
 
         return { success: true, data: datosLimpios };
     } catch (error) {
