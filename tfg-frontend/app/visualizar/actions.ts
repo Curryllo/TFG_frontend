@@ -90,6 +90,7 @@ export async function getDatosHumanos() {
             hospitalizado: item.casohospitalizado || 'No'
         }));
 
+        console.log("Datos humanos procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
     } catch (error) {
         console.error("Error leyendo de MinIO:", error);
@@ -124,6 +125,7 @@ export async function getDatosGarrapatas() {
             enHumano: item.enhumano || 'No',
             enAnimal: item.enanimal || 'Desconocido'
         }));
+        
 
         return { success: true, data: datosLimpios };
 

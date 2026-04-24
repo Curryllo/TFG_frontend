@@ -1,36 +1,34 @@
 'use client';
 
-//import { postHumanos } from "@/app/registrar/(registros)/humanos/actions";
-import { useState, useActionState, useEffect } from "react";
-import { useAuthStore } from '@/store/authStore';
-import { peticionAutenticada } from '@/services/api';
+import { useState, useMemo } from "react";
 import { useRouter } from 'next/navigation';
+import { peticionAutenticada } from '@/services/api';
+import Select from 'react-select';
+import countries from "i18n-iso-countries";
+import esLocale from "i18n-iso-countries/langs/es.json";
+import { revalidarMapas, revalidarGraficos } from '@/app/registrar/actions';
+
+// 1. Registramos el idioma para los países
+countries.registerLocale(esLocale);
 
 export default function HumanosForm() {
-
     const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
-
-    //const [state, formAction, isPending] = useActionState(postHumanos, null);
-
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
-    //const token = useAuthStore((state) => state.token);
+    // 2. Estado para almacenar el valor del react-select
+    const [paisSeleccionado, setPaisSeleccionado] = useState<{value: string, label: string} | null>(null);
 
-    /*
-    useEffect(() => {
-        if (state?.success) {
-            setMostrarPopUp(true);
-            
-            const timer = setTimeout(() => {
-                setMostrarPopUp(false);
-            }, 3000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [state]);
-
-    */
+    // 3. Generamos la lista de países para el buscador
+    const opcionesPaises = useMemo(() => {
+        const paisesObj = countries.getNames("es", { select: "official" });
+        return Object.entries(paisesObj)
+            .map(([codigo, nombre]) => ({
+                value: codigo, 
+                label: nombre  
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -38,13 +36,13 @@ export default function HumanosForm() {
 
         const formData = new FormData(e.currentTarget);
 
-        // 1. Preparamos el objeto con los datos del formulario
+        // Como usamos un input oculto para el país, esto recogerá su valor perfectamente
         const datosHumanos = {
             edad: Number(formData.get('edad')),
             sexo: formData.get('sexo'),
             fechaCaso: formData.get('fechaCaso'),
             enfermedad: formData.get('enfermedad'),
-            pais: formData.get('pais'),
+            pais: formData.get('pais'), // <--- Recogerá el valor del input hidden
             provinciaResidencia: formData.get('provinciaResidencia'),
             municipioResidencia: formData.get('municipioResidencia'),
             defuncion: formData.get('defuncion') === 'on',
@@ -52,16 +50,17 @@ export default function HumanosForm() {
         };
 
         try {
-            // 2. USAMOS LA MAGIA: Si el token de 1 min ha caducado, 
-            // esta función lo refrescará antes de enviar los datos.
             const response = await peticionAutenticada('/formHumanos', {
                 method: 'POST',
                 body: JSON.stringify(datosHumanos)
             });
 
             if (response.ok) {
-                alert("¡Caso humano registrado!");
-                router.refresh(); // Esto equivale al revalidatePath
+                setMostrarPopUp(true);
+                setTimeout(() => setMostrarPopUp(false), 2000);
+                await revalidarMapas();
+                await revalidarGraficos();
+                setEstado({ cargando: false, error: "" });
             } else {
                 setEstado({ cargando: false, error: `Error ${response.status}` });
             }
@@ -92,8 +91,6 @@ export default function HumanosForm() {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/*<input type="hidden" name="accessToken" value={token || ''} />*/}
-
                     {/* Edad */}
                     <div>
                         <label htmlFor="edad" className="block text-sm font-medium text-gray-600 mb-1">
@@ -168,17 +165,39 @@ export default function HumanosForm() {
                         </select>
                     </div>
 
-                    {/* País de Infección */}
+                    {/* === PAÍS DE INFECCIÓN CON BUSCADOR === */}
                     <div>
-                        <label htmlFor="pais" className="block text-sm font-medium text-gray-600 mb-1">
+                        <label htmlFor="pais-select" className="block text-sm font-medium text-gray-600 mb-1">
                             País de Infección *
                         </label>
-                        <input
-                            type="text"
-                            id="pais"
-                            name="pais"
-                            required
-                            className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
+                        <Select
+                            inputId="pais-select"
+                            options={opcionesPaises}
+                            value={paisSeleccionado}
+                            onChange={(opcion) => setPaisSeleccionado(opcion)}
+                            placeholder="Escribe para buscar..."
+                            isSearchable={true}
+                            noOptionsMessage={() => "No se encontró ningún país"}
+                            className="w-full text-gray-600 font-medium focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    borderColor: state.isFocused ? '#99f6e4' : '#d1d5db',
+                                    boxShadow: state.isFocused ? '0 0 0 2px #99f6e4' : 'none',
+                                    borderRadius: '0.5rem',
+                                    padding: '2px',
+                                    '&:hover': { borderColor: '#9ca3af' }
+                                }),
+                                menu: (base) => ({ ...base, zIndex: 50 }) // Para que el desplegable pase por encima de otros campos
+                            }}
+                        />
+                        {/* INPUT OCULTO: Este es el que lee tu FormData en el handleSubmit */}
+                        {/* Nota: Envía el nombre del país en español. Si prefieres enviar el código ISO (ESP), cambia .label por .value */}
+                        <input 
+                            type="hidden" 
+                            name="pais" 
+                            value={paisSeleccionado ? paisSeleccionado.label : ''} 
+                            required 
                         />
                     </div>
 
@@ -199,7 +218,7 @@ export default function HumanosForm() {
                         </select>
                     </div>
 
-                    {/* Municipio de Residencia del Paciente */}
+                    {/* Municipio de Residencia */}
                     <div>
                         <label htmlFor="municipioResidencia" className="block text-sm font-medium text-gray-600 mb-1">
                             Municipio de Residencia del Paciente *
@@ -208,6 +227,7 @@ export default function HumanosForm() {
                             type="text"
                             id="municipioResidencia"
                             name="municipioResidencia"
+                            placeholder="Zaragoza"
                             required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
@@ -236,22 +256,12 @@ export default function HumanosForm() {
                     </label>
                 </div>
 
-                {/*
                 <div className="pt-4 flex justify-end">
-                    <button
-                        type="submit"
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                        Guardar Registro
-                    </button>
-                </div>
-                */}
-                <div className="pt-4 flex justify-end">
-                    <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
                         {estado.cargando ? 'Enviando...' : 'Guardar Registro'}
                     </button>
-                    {estado.error && <p className="text-red-500">{estado.error}</p>}
                 </div>
+                {estado.error && <p className="text-red-500 text-right">{estado.error}</p>}
             </form>
         </div>
     );

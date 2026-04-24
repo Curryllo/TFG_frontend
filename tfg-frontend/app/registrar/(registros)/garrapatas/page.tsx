@@ -1,34 +1,17 @@
 'use client';
 
-//import { postGarrapatas } from "@/app/registrar/(registros)/garrapatas/actions";
 import { useState, useActionState, useEffect } from "react";
-import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import { peticionAutenticada } from '@/services/api';
+import { revalidarMapas, revalidarGraficos } from '@/app/registrar/actions';
 
 export default function AnimalesForm() {
-    //const [state, formAction, isPending] = useActionState(postGarrapatas, null);
 
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
     const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
 
-    //const token = useAuthStore((state) => state.token);
-
-    /*
-    useEffect(() => {
-        if (state?.success) {
-            setMostrarPopUp(true);
-
-            const timer = setTimeout(() => {
-                setMostrarPopUp(false);
-            }, 3000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [state]);
-    */
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -46,16 +29,17 @@ export default function AnimalesForm() {
         };
 
         try {
-            // 2. USAMOS LA MAGIA: Si el token de 1 min ha caducado, 
-            // esta función lo refrescará antes de enviar los datos.
             const response = await peticionAutenticada('/formGarrapatas', {
                 method: 'POST',
                 body: JSON.stringify(datosGarrapatas)
             });
 
             if (response.ok) {
-                alert("¡Caso humano registrado!");
-                router.refresh(); // Esto equivale al revalidatePath
+                setMostrarPopUp(true);
+                setTimeout(() => setMostrarPopUp(false), 2000);
+                await revalidarMapas();
+                await revalidarGraficos();
+                setEstado({ cargando: false, error: "" });
             } else {
                 setEstado({ cargando: false, error: `Error ${response.status}` });
             }
@@ -98,6 +82,7 @@ export default function AnimalesForm() {
                             id="municipio"
                             name="municipio"
                             required
+                            placeholder="Zaragoza"
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
                     </div>

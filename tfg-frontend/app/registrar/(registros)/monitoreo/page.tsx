@@ -1,41 +1,18 @@
 'use client'
-import { postMonitoreo } from "@/app/registrar/(registros)/monitoreo/action";
 import { useState, useActionState, useEffect } from "react";
-import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import { peticionAutenticada } from '@/services/api';
+import { revalidarMapas, revalidarGraficos } from '@/app/registrar/actions';
 
 export default function MonitoreoForm() {
-    //const [state, formAction, isPending] = useActionState(postMonitoreo, null);
 
     const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
-    //const token = useAuthStore((state) => state.token);
-
     const [lugar, setLugar] = useState('');
     const [latitud, setLatitud] = useState('');
     const [longitud, setLongitud] = useState('');
-
-    /*
-    useEffect(() => {
-        if (state?.success) {
-            setMostrarPopUp(true);
-
-            setLugar('');
-            setLatitud('');
-            setLongitud('');
-
-            const timer = setTimeout(() => {
-                setMostrarPopUp(false);
-            }, 3000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [state]);
-    */
-
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -56,16 +33,17 @@ export default function MonitoreoForm() {
         };
 
         try {
-            // 2. USAMOS LA MAGIA: Si el token de 1 min ha caducado, 
-            // esta función lo refrescará antes de enviar los datos.
             const response = await peticionAutenticada('/formMonitoreo', {
                 method: 'POST',
                 body: JSON.stringify(datosMonitoreo)
             });
 
             if (response.ok) {
-                alert("¡Caso humano registrado!");
-                router.refresh(); // Esto equivale al revalidatePath
+                setMostrarPopUp(true);
+                setTimeout(() => setMostrarPopUp(false), 2000);
+                await revalidarMapas();
+                await revalidarGraficos();
+                setEstado({ cargando: false, error: "" });
             } else {
                 setEstado({ cargando: false, error: `Error ${response.status}` });
             }
@@ -111,6 +89,7 @@ export default function MonitoreoForm() {
                             type="text"
                             id="lugar"
                             name="lugar"
+                            placeholder="Parque Delicias de Zaragoza"
                             value={lugar}
                             onChange={(e) => {
                                 setLugar(e.target.value);
@@ -133,6 +112,7 @@ export default function MonitoreoForm() {
                             step="any"
                             id="latitud"
                             name="latitud"
+                            placeholder="6472749"
                             value={latitud}
                             onChange={(e) => {
                                 setLatitud(e.target.value);
@@ -154,6 +134,7 @@ export default function MonitoreoForm() {
                             step="any"
                             id="longitud"
                             name="longitud"
+                            placeholder="-0,9116654"
                             value={longitud}
                             onChange={(e) => {
                                 setLongitud(e.target.value);
@@ -174,6 +155,7 @@ export default function MonitoreoForm() {
                             type="text"
                             id="vector"
                             name="vector"
+                            placeholder="Aedes albopictus"
                             required
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
                         />
@@ -182,27 +164,44 @@ export default function MonitoreoForm() {
                     {/* Enfermedad */}
                     <div>
                         <label htmlFor="enfermedad" className="block text-sm font-medium text-gray-600 mb-1">
-                            Enfermedad
+                            Enfermedad *
                         </label>
-                        <input
-                            type="text"
+                        <select
                             id="enfermedad"
                             name="enfermedad"
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
-                        />
+                        >
+                            <option value="" className="text-gray-600">Ninguna</option>
+                            <option value="Dengue" className="text-gray-600">Dengue</option>
+                            <option value="Encefalitis Trasmitida por Garrapatas" className="text-gray-600">Encefalitis Trasmitida por Garrapatas</option>
+                            <option value="Enfermedad de Lyme" className="text-gray-600">Enfermedad de Lyme</option>
+                            <option value="Enfermedad por virus Chikunguya" className="text-gray-600">Enfermedad por virus Chikunguya</option>
+                            <option value="Fiebre amarilla" className="text-gray-600">Fiebre amarilla</option>
+                            <option value="Fiebre del Nilo occidental" className="text-gray-600">Fiebre del Nilo occidental</option>
+                            <option value="Fiebre exantemática mediterránea" className="text-gray-600">Fiebre exantemática mediterránea</option>
+                            <option value="Fiebre recurrente transmitida por garrapatas" className="text-gray-600">Fiebre recurrente transmitida por garrapatas</option>
+                            <option value="Fiebre hemorrágicas víricas" className="text-gray-600">Fiebre hemorrágicas víricas</option>
+                            <option value="Leishmaniasis" className="text-gray-600">Leishmaniasis</option>
+                            <option value="Paludismo" className="text-gray-600">Paludismo</option>
+                            <option value="Tularemia" className="text-gray-600">Tularemia</option>
+                            <option value="Zika congénito" className="text-gray-600">Zika congénito</option>
+                            <option value="Zika" className="text-gray-600">Zika</option>
+                        </select>
                     </div>
 
-                    {/* Género */}
                     <div>
                         <label htmlFor="genero" className="block text-sm font-medium text-gray-600 mb-1">
                             Género Vector
                         </label>
-                        <input
-                            type="text"
+                        <select
                             id="genero"
                             name="genero"
                             className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
-                        />
+                        >
+                            <option value="" className="text-gray-600">Vacío</option>
+                            <option value="H" className="text-gray-600">Hembra</option>
+                            <option value="M" className="text-gray-600">Macho</option>
+                        </select>
                     </div>
 
 
