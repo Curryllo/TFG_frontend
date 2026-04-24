@@ -104,7 +104,7 @@ const ChartBarrasEdadCasos = () => {
     }, [datosCrudos]);
 
     return (
-        <div className="flex flex-col gap-4 w-full mb-6">
+        <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">
             <div style={{ height: '400px' }}>
                 <AgCharts options={options} />
             </div>

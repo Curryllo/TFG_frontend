@@ -105,7 +105,7 @@ const ChartRelacionAñoSexoCasos = () => {
     }, [datosCrudos, enfermedadSeleccionada]);
 
     return (
-        <div>
+        <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">
             {/* Opcional: Un selector básico para probar el filtro de enfermedades */}
             <div style={{ marginBottom: '1rem' }}>
                 <label className="font-semibold text-gray-700">Filtrar por enfermedad: </label>

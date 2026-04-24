@@ -11,6 +11,9 @@ import ChartRelacionAñoSexoCasos from "@/components/ChartRelacionAñoSexoCasos"
 import ChartPaisesBarrasCasos from "@/components/ChartPaisesBarrasCasos";
 import ChartOrigenPieCasos from "@/components/ChartOrigenPieCasos";
 import ChartBarrasEdadPorEnfermedad from '@/components/ChartBarrasEdadCasosPorEnfermedad';
+import ChartVectoresBarras from "@/components/ChartVectoresBarras";
+import CharVectoresAnillo from "@/components/ChartVectoresAnillo";
+import IndicadorVectores from '@/components/IndicadorVectores';
 import {
     BarSeriesModule,
     CategoryAxisModule,
@@ -18,208 +21,11 @@ import {
     ModuleRegistry,
     NumberAxisModule,
     PieSeriesModule,
-    LineSeriesModule
+    LineSeriesModule,
+    DonutSeriesModule
 } from "ag-charts-community";
 
-ModuleRegistry.registerModules([BarSeriesModule, CategoryAxisModule, LegendModule, NumberAxisModule, PieSeriesModule, LineSeriesModule]);
-
-
-
-
-const ChartOrigenPieHumanos = () => {
-    const [datosCrudos, setDatosCrudos] = useState<any[]>([]);
-    const [enfermedades, setEnfermedades] = useState<string[]>([]);
-    const [enfermedadSeleccionada, setEnfermedadSeleccionada] = useState<string>('Todas');
-
-
-    const [options, setOptions] = useState<AgChartOptions>({
-        title: {
-            text: "Origen de los casos registrados",
-        },
-        subtitle: {
-            text: "Autóctonos (España) vs Importados",
-        },
-        data: [],
-        series: [
-            {
-                type: "pie",
-                angleKey: "numero",
-                legendItemKey: "origen",
-            },
-        ],
-    });
-
-    useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosHumanos();
-
-                if (respuesta.success && respuesta.data) {
-                    setDatosCrudos(respuesta.data);
-
-                    const listaEnfermedades = respuesta.data.map((caso: any) => caso.enfermedad || 'Desconocida');
-                    const enfermedadesUnicas = Array.from(new Set(listaEnfermedades)) as string[];
-                    setEnfermedades(enfermedadesUnicas);
-
-                    console.log("Enfermedades cargadas de forma única:", enfermedadesUnicas);
-
-                } else {
-                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos de monitoreo:", error);
-            }
-        };
-
-        cargarDatos();
-    }, []);
-
-    useEffect(() => {
-        if (datosCrudos.length === 0) return;
-
-        const datosFiltrados = enfermedadSeleccionada === 'Todas'
-            ? datosCrudos
-            : datosCrudos.filter(caso => (caso.enfermedad || 'Desconocida') === enfermedadSeleccionada);
-
-        const conteoOrigen = datosFiltrados.reduce((acumulador: any, caso: any) => {
-            // Limpiamos espacios y verificamos si es España
-            const paisLimpio = caso.pais ? caso.pais.trim() : "";
-            const categoria = paisLimpio === "España" ? "Autóctono" : "Importado";
-
-            // Sumamos al contador de esa categoría
-            acumulador[categoria] = (acumulador[categoria] || 0) + 1;
-
-            return acumulador;
-        }, {});
-
-
-        const datosParaGrafica = Object.keys(conteoOrigen).map(clave => ({
-            origen: clave,
-            numero: conteoOrigen[clave]
-        }));
-
-        setOptions((opcionesPrevias) => ({
-            ...opcionesPrevias,
-            data: datosParaGrafica
-        }));
-
-    }, [datosCrudos, enfermedadSeleccionada]);
-
-    return (
-        <div className="flex flex-col gap-4 w-full">
-            <div className="px-4 pt-4 flex items-center gap-3">
-                <label htmlFor="selector-enfermedad" className="font-semibold text-gray-700">
-                    Filtrar por enfermedad:
-                </label>
-                <select
-                    id="selector-enfermedad"
-                    value={enfermedadSeleccionada}
-                    onChange={(e) => setEnfermedadSeleccionada(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-800"
-                >
-                    <option value="Todas">Todas las enfermedades</option>
-                    {enfermedades.map((enf) => (
-                        <option key={enf} value={enf}>
-                            {enf}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <AgCharts options={options} />
-        </div>
-    );
-};
-
-
-const ChartFechasBarraMonitoreo = () => {
-    const [options, setOptions] = useState<AgChartOptions>({
-        title: {
-            text: "Muestras obtenidas por fecha",
-        },
-        subtitle: {
-            text: " ",
-        },
-        data: [],
-        series: [
-            {
-                type: "bar",
-                xKey: "fecha",
-                yKey: "numero",
-                yName: "Número de casos",
-            },
-        ],
-    });
-
-    useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosMontireo();
-
-                // Comprobamos si la respuesta fue exitosa y tiene datos
-                if (respuesta.success && respuesta.data) {
-                    // Actualizamos el estado solo con la propiedad data
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: respuesta.data, // <-- Pasamos el array real aquí
-                    }));
-                    console.log("Datos cargados para el gráfico:", respuesta.data);
-                } else {
-                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos de monitoreo:", error);
-            }
-        };
-
-        cargarDatos();
-    }, []);
-
-    return <AgCharts options={options} />;
-};
-
-const ChartVectoresPieMonitoreo = () => {
-    const [options, setOptions] = useState<AgChartOptions>({
-        title: {
-            text: "Muestras obtenidas por vectores",
-        },
-        subtitle: {
-            text: " ",
-        },
-        data: [],
-        series: [
-            {
-                type: "pie",
-                angleKey: "numero",
-                legendItemKey: "vector",
-            },
-        ],
-    });
-
-    useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosMontireo();
-
-                if (respuesta.success && respuesta.data) {
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: respuesta.data, // <-- Pasamos el array real aquí
-                    }));
-                    console.log("Datos cargados para el gráfico pie de vectores:", respuesta.data);
-                } else {
-                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos de monitoreo:", error);
-            }
-        };
-
-        cargarDatos();
-    }, []);
-
-    return <AgCharts options={options} />;
-};
-
+ModuleRegistry.registerModules([BarSeriesModule, CategoryAxisModule, LegendModule, NumberAxisModule, PieSeriesModule, LineSeriesModule, DonutSeriesModule]);
 
 const ChartFechaBarrasGarrapatas = () => {
     const [options, setOptions] = useState<AgChartOptions>({
@@ -373,8 +179,9 @@ export default function VisualizacionGraficos() {
                         <h2 className="text-xl font-bold text-gray-900">Análisis de Monitoreo Entomológico</h2>
                     </div>
                     <div className="w-full">
-                        <ChartFechasBarraMonitoreo />
-                        <ChartVectoresPieMonitoreo />
+                        <IndicadorVectores />
+                        <ChartVectoresBarras />
+                        <CharVectoresAnillo />
                     </div>
                 </div>
 
@@ -383,8 +190,10 @@ export default function VisualizacionGraficos() {
                         <h2 className="text-xl font-bold text-gray-900">Análisis de Casos Animales</h2>
                     </div>
                     <div className="w-full">
+                        {/*
                         <ChartFechaBarrasGarrapatas />
                         <ChartGarrapatasPie />
+                        */}
                     </div>
                 </div>
             </div>
