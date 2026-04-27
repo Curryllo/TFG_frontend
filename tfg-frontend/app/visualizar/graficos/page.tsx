@@ -14,6 +14,9 @@ import ChartBarrasEdadPorEnfermedad from '@/components/ChartBarrasEdadCasosPorEn
 import ChartVectoresBarras from "@/components/ChartVectoresBarras";
 import CharVectoresAnillo from "@/components/ChartVectoresAnillo";
 import IndicadorVectores from '@/components/IndicadorVectores';
+import ChartBarrasGarrapatas from "@/components/ChartBarrasGarrapatas";
+import ChartBarrasFechaGarrapatas from "@/components/ChartBarrasFechaGarrapatas";
+import ChartDonutEspeciesGarrapatas from "@/components/ChartDonutsEspecieGarrapatas";
 import {
     BarSeriesModule,
     CategoryAxisModule,
@@ -26,122 +29,6 @@ import {
 } from "ag-charts-community";
 
 ModuleRegistry.registerModules([BarSeriesModule, CategoryAxisModule, LegendModule, NumberAxisModule, PieSeriesModule, LineSeriesModule, DonutSeriesModule]);
-
-const ChartFechaBarrasGarrapatas = () => {
-    const [options, setOptions] = useState<AgChartOptions>({
-        title: {
-            text: "Garrapatas recogidas por fecha",
-        },
-        subtitle: {
-            text: " ",
-        },
-        data: [],
-        series: [
-            {
-                type: "bar",
-                xKey: "fecha",
-                yKey: "numero",
-                yName: "Número de casos",
-            },
-        ],
-    });
-
-    useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosGarrapatas();
-
-                if (respuesta.success && respuesta.data) {
-                    const conteoPorFecha = respuesta.data.reduce((acumulador: any, caso: any) => {
-                        // Pillamos el nombre de la enfermedad (si viene vacío, le ponemos 'Desconocida')
-                        const fecha = caso.fechaRecogida || null;
-
-                        // Si ya la hemos visto, le sumamos 1. Si es la primera vez, la empezamos en 1.
-                        acumulador[fecha] = (acumulador[fecha] || 0) + 1;
-
-                        return acumulador;
-                    }, {});
-
-                    const datosParaGrafica = Object.keys(conteoPorFecha).map(clave => ({
-                        fecha: clave,
-                        numero: conteoPorFecha[clave]
-                    }));
-
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: datosParaGrafica,
-                    }));
-                    console.log("Datos cargados para el gráfico de barras de casos:", datosParaGrafica);
-                } else {
-                    console.warn("No se pudieron cargar los datos de garrapatas o la respuesta no fue exitosa.", respuesta);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos de garrapatas:", error);
-            }
-        };
-
-        cargarDatos();
-    }, []);
-
-    return <AgCharts options={options} />;
-};
-
-const ChartGarrapatasPie = () => {
-    const [options, setOptions] = useState<AgChartOptions>({
-        title: {
-            text: "Garrapatas recogidas por especie",
-        },
-        subtitle: {
-            text: " ",
-        },
-        data: [],
-        series: [
-            {
-                type: "pie",
-                angleKey: "numero",
-                legendItemKey: "especie",
-            },
-        ],
-    });
-
-    useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosGarrapatas();
-
-                if (respuesta.success && respuesta.data) {
-                    const conteoPorEspecie = respuesta.data.reduce((acumulador: any, caso: any) => {
-                        const nombreEspecie = caso.especie || 'Desconocida';
-
-                        acumulador[nombreEspecie] = (acumulador[nombreEspecie] || 0) + 1;
-
-                        return acumulador;
-                    }, {});
-
-                    const datosParaGrafica = Object.keys(conteoPorEspecie).map(clave => ({
-                        especie: clave,
-                        numero: conteoPorEspecie[clave]
-                    }));
-
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: datosParaGrafica,
-                    }));
-                    console.log("Datos cargados para el gráfico:", datosParaGrafica);
-                } else {
-                    console.warn("No se pudieron cargar los datos de garrapatas o la respuesta no fue exitosa.", respuesta);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos de garrapatas:", error);
-            }
-        };
-
-        cargarDatos();
-    }, []);
-
-    return <AgCharts options={options} />;
-};
-
 
 export default function VisualizacionGraficos() {
     return (
@@ -194,6 +81,9 @@ export default function VisualizacionGraficos() {
                         <ChartFechaBarrasGarrapatas />
                         <ChartGarrapatasPie />
                         */}
+                        <ChartBarrasGarrapatas />
+                        <ChartBarrasFechaGarrapatas />
+                        <ChartDonutEspeciesGarrapatas />
                     </div>
                 </div>
             </div>

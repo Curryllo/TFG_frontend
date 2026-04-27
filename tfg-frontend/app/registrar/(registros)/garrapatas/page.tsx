@@ -12,6 +12,9 @@ export default function AnimalesForm() {
     const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
 
+    const [tieneAnimal, setTieneAnimal] = useState(false);
+    const [tieneHumano, setTieneHumano] = useState(false);
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -25,7 +28,7 @@ export default function AnimalesForm() {
             especie: formData.get('especie'),
             fecha: formData.get('fechaRecogida'),
             enHumano: formData.get('enHumano') === 'on',
-            animal: formData.get('enAnimal')
+            animal: formData.get('enAnimal') ?? ''
         };
 
         try {
@@ -142,6 +145,9 @@ export default function AnimalesForm() {
                                     type="checkbox"
                                     id="enHumano"
                                     name="enHumano"
+                                    disabled={tieneAnimal}
+                                    checked={tieneHumano}
+                                    onChange={(e) => setTieneHumano(e.target.checked)}
                                     className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:outline-teal-200"
                                 />
                             </label>
@@ -154,8 +160,11 @@ export default function AnimalesForm() {
                             <select
                                 id="enAnimal"
                                 name="enAnimal"
+                                disabled={tieneHumano}
+                                onChange={(e) => setTieneAnimal(e.target.value !== '')}
                                 className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
-                            >
+                            >   
+                                <option value="">Ninguno</option>
                                 <option value="Cabra Montés" className="text-gray-600">Cabra Montés</option>
                                 <option value="Ciervo" className="text-gray-600">Ciervo</option>
                                 <option value="Corzo" className="text-gray-600">Corzo</option>

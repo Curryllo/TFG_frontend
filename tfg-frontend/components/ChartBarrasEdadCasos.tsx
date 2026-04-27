@@ -13,7 +13,7 @@ const ChartBarrasEdadCasos = () => {
         title: { text: "Casos de enfermedades por grupos de edad" },
         subtitle: { text: " " },
         data: [],
-        series: [], // <-- Lo dejamos vacío porque lo generaremos dinámicamente
+        series: [],
         axes: [
             { type: "category", position: "bottom", title: { text: "Rango de Edad" } },
             { type: "number", position: "left", title: { text: "Número de Casos" } }

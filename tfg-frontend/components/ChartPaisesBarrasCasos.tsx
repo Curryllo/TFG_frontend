@@ -31,7 +31,6 @@ const ChartPaisesBarrasCasos = () => {
         const cargarDatos = async () => {
             try {
                 const respuesta = await getDatosHumanos();
-
                 if (respuesta.success && respuesta.data) {
                     setDatosCrudos(respuesta.data);
 

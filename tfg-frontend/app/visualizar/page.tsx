@@ -59,7 +59,7 @@ export default function DataVisualization() {
 
                 <div className="flex flex-col items-center text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-3">
-                        Visualización de Datos
+                        Consulta de Datos
                     </h1>
                     <p className="text-gray-600 text-lg">
                         Seleccione el tipo de visualización

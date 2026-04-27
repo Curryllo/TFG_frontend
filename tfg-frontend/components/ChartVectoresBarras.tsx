@@ -28,15 +28,20 @@ const ChartVectoresBarras = () => {
         const cargarDatos = async () => {
             try {
                 const respuesta = await getDatosMontireo();
-
+                console.log("CLIENTE recibe:", respuesta);
                 if (respuesta.success && respuesta.data) {
-                    setOptions((opcionesPrevias) => ({
-                        ...opcionesPrevias,
-                        data: respuesta.data,
+                    // Agrupar por vector sumando el número de muestras
+                    const agrupado = respuesta.data.reduce((acc: any, item: any) => {
+                        const vector = item.vector.trim();
+                        if (!acc[vector]) acc[vector] = { vector, numero: 0 };
+                        acc[vector].numero += item.numero;
+                        return acc;
+                    }, {});
+
+                    setOptions((prev) => ({
+                        ...prev,
+                        data: Object.values(agrupado),
                     }));
-                    console.log("Datos cargados para el gráfico barras de vectores:", respuesta.data);
-                } else {
-                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
                 }
             } catch (error) {
                 console.error("Error al cargar los datos de monitoreo:", error);
@@ -46,7 +51,7 @@ const ChartVectoresBarras = () => {
         cargarDatos();
     }, []);
 
-    return <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2"><AgCharts options={options} /></div>;
+    return <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2"><AgCharts key={options.data?.length} options={options} /></div>;
 };
 
 export default ChartVectoresBarras;

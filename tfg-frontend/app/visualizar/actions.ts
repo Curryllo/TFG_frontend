@@ -1,3 +1,5 @@
+'use server';
+import { unstable_noStore as noStore } from 'next/cache';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import Papa from "papaparse";
 
@@ -12,6 +14,7 @@ const s3Client = new S3Client({
 });
 
 export async function getDatosMontireo() {
+    noStore();
     try {
         const command = new GetObjectCommand({
             Bucket: "tfg-data-lake",
@@ -50,8 +53,8 @@ export async function getDatosMontireo() {
             lugarRecogida: item.lugarRecogida || 'Desconocido',
             enfermedad: item.enfermedad || ''
         }));
-        console.log("Datos monitoreo procesados:", datosLimpios);
-
+        
+        //console.log("Datos monitoreo procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
     } catch (error) {
         console.error("Error leyendo de MinIO:", error);
@@ -61,6 +64,7 @@ export async function getDatosMontireo() {
 }
 
 export async function getDatosHumanos() {
+    noStore();
     try {
         const command = new GetObjectCommand({
             Bucket: "tfg-data-lake",
@@ -92,7 +96,7 @@ export async function getDatosHumanos() {
             hospitalizado: item.casohospitalizado || 'No'
         }));
 
-        console.log("Datos humanos procesados:", datosLimpios);
+        //console.log("Datos humanos procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
     } catch (error) {
         console.error("Error leyendo de MinIO:", error);
@@ -102,6 +106,7 @@ export async function getDatosHumanos() {
 }
 
 export async function getDatosGarrapatas() {
+    noStore();
     try {
         const command = new GetObjectCommand({
             Bucket: "tfg-data-lake",
@@ -125,10 +130,10 @@ export async function getDatosGarrapatas() {
             especie: item.especie || 'Desconicida',
             fechaRecogida: item.fecharecogida ? item.fecharecogida.split(' ')[0].split('T')[0] : '',
             enHumano: item.enhumano || 'No',
-            enAnimal: item.enanimal || 'Desconocido'
+            enAnimal: item.animal || 'Desconocido'
         }));
         
-
+        //console.log("Datos garrapatas procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
 
     } catch (error) {
