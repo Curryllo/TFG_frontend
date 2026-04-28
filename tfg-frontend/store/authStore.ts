@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>()(
             limpiarToken: () => set({ token: null }),
         }),
         {
-            name: 'auth-storage', // clave en localStorage
+            name: 'tfg-unizar-auth',
         }
     )
 );

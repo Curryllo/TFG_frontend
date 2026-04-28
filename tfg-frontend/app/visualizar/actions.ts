@@ -124,8 +124,20 @@ export async function getDatosGarrapatas() {
             skipEmptyLines: true,
         });
 
+        const parseCoordenada = (valor: any): number => {
+            if (typeof valor === 'number') return valor;
+            if (typeof valor === 'string') {
+                // Cambiamos la coma por el punto y lo convertimos a número decimal
+                const parseado = parseFloat(valor.replace(',', '.'));
+                return isNaN(parseado) ? 0 : parseado;
+            }
+            return 0;
+        };
+
 
         const datosLimpios = parsed.data.map((item: any) => ({
+            latitud: parseCoordenada(item.latitud),
+            longitud: parseCoordenada(item.longitud),
             municipioRecogida: item.municipiorecogida || 'Desconocido',
             especie: item.especie || 'Desconicida',
             fechaRecogida: item.fecharecogida ? item.fecharecogida.split(' ')[0].split('T')[0] : '',
@@ -133,7 +145,7 @@ export async function getDatosGarrapatas() {
             enAnimal: item.animal || 'Desconocido'
         }));
         
-        //console.log("Datos garrapatas procesados:", datosLimpios);
+        console.log("Datos garrapatas procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
 
     } catch (error) {

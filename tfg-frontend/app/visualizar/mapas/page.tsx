@@ -1,16 +1,16 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ArrowLeft, Activity, Bug } from 'lucide-react';
+import { ArrowLeft, Activity, Bug, Eye } from 'lucide-react';
 import EstrategiaHumanos from '@/components/EstrategiaHumanos';
 import EstrategiaMonitoreo from '@/components/EstrategiaMonitoreo';
+import EstrategiaGarrapatas from '@/components/EstrategiaGarrapatas';
 
 
 
 
-type TipoEstrategia = 'humanos' | 'vectores';
+type TipoEstrategia = 'humanos' | 'vectores' | 'garrapatas';
 
 export default function VisualizacionMapas() {
     const [estrategia, setEstrategia] = useState<TipoEstrategia>('humanos');
@@ -46,8 +46,17 @@ export default function VisualizacionMapas() {
                                 estrategia === 'vectores' ? 'bg-teal-100 text-teal-700' : 'text-gray-500 hover:bg-gray-100'
                             }`}
                         >
-                            <Bug className="w-4 h-4" />
+                            <Eye className="w-4 h-4" />
                             Monitoreo Entomológico
+                        </button>
+                        <button
+                            onClick={() => setEstrategia('garrapatas')}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
+                                estrategia === 'garrapatas' ? 'bg-teal-100 text-teal-700' : 'text-gray-500 hover:bg-gray-100'
+                            }`}
+                        >
+                            <Bug className="w-4 h-4" />
+                            Garrapatas
                         </button>
                     </div>
                 </div>
@@ -56,6 +65,7 @@ export default function VisualizacionMapas() {
                 <div className="mt-6">
                     {estrategia === 'humanos' && <EstrategiaHumanos />}
                     {estrategia === 'vectores' && <EstrategiaMonitoreo />}
+                    {estrategia === 'garrapatas' && <EstrategiaGarrapatas />}
                 </div>
             </div>
         </div>
