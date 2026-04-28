@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { getDatosMontireo } from "@/app/visualizar/actions";
+import { getDatosMontireo } from "@/app/(main)/visualizar/actions";
 
 const VectoresMapStrategy = dynamic(() => import('@/components/SimpleVectorMap'), { ssr: false });
 

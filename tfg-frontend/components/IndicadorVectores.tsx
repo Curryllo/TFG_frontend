@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getDatosMontireo } from "@/app/visualizar/actions";
+import { getDatosMontireo } from "@/app/(main)/visualizar/actions";
 
 const IndicadorVectores = () => {
     const [totalVectores, setTotalVectores] = useState<number>(0);

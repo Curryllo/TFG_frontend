@@ -1,6 +1,6 @@
 // services/api.ts
 import { useAuthStore } from '@/store/authStore';
-import { refrescarSesionServidor } from '@/app/actions/auth';
+import { refrescarSesionServidor } from '@/app/(auth)/actions/auth';
 
 export async function peticionAutenticada(endpoint: string, opciones: RequestInit = {}) {
     let token = useAuthStore.getState().token;

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { postSingIn } from "@/app/actions/auth";
+import { postSingIn } from "@/app/(auth)/actions/auth";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 

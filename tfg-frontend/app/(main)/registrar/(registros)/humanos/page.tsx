@@ -6,7 +6,7 @@ import { peticionAutenticada } from '@/services/api';
 import Select from 'react-select';
 import countries from "i18n-iso-countries";
 import esLocale from "i18n-iso-countries/langs/es.json";
-import { revalidarMapas, revalidarGraficos } from '@/app/registrar/actions';
+import { revalidarMapas, revalidarGraficos } from '@/app/(main)/registrar/actions';
 
 // 1. Registramos el idioma para los países
 countries.registerLocale(esLocale);

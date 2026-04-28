@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { AgCharts } from 'ag-charts-react';
 import { AgChartOptions } from 'ag-charts-community';
-import { getDatosGarrapatas } from "@/app/visualizar/actions";
+import { getDatosGarrapatas } from "@/app/(main)/visualizar/actions";
 
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 

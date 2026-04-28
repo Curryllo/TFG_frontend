@@ -1,5 +1,5 @@
 'use client';
-import { getDatosGarrapatas } from "@/app/visualizar/actions";
+import { getDatosGarrapatas } from "@/app/(main)/visualizar/actions";
 import { useState, useEffect, useMemo } from 'react';
 import GarrapatasMap from "./SimpleGarrapatasMap";
 

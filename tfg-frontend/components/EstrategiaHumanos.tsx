@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { getDatosHumanos } from "@/app/visualizar/actions";
+import { getDatosHumanos } from "@/app/(main)/visualizar/actions";
 
 const PaisMapStrategy = dynamic(() => import('@/components/PaisHumanosMap'), { ssr: false });
 

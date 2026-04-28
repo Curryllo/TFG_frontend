@@ -2,7 +2,7 @@
 import { useState, useActionState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { peticionAutenticada } from '@/services/api';
-import { revalidarMapas, revalidarGraficos } from '@/app/registrar/actions';
+import { revalidarMapas, revalidarGraficos } from '@/app/(main)/registrar/actions';
 
 export default function MonitoreoForm() {
 

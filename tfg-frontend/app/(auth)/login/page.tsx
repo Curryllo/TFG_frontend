@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { postLogIn } from "@/app/actions/auth"; // Tu Server Action
+import { postLogIn } from "@/app/(auth)/actions/auth"; // Tu Server Action
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 

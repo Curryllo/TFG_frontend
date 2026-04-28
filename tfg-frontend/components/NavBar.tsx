@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import { cerrarSesion } from '@/app/actions/auth';
+import { cerrarSesion } from '@/app/(auth)/actions/auth';
 import { LogOut, House } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { jwtDecode } from 'jwt-decode';
