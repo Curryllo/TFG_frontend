@@ -4,30 +4,30 @@ import { postSingIn } from "@/app/(auth)/actions/auth";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
-export default function LoginPage() {
+export default function SingInPage() {
     const router = useRouter();
-    const setToken = useAuthStore((state) => state.setToken);
     const [cargando, setCargando] = useState(false);
     const [errorMensaje, setErrorMensaje] = useState("");
+    const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Evitamos que la página se recargue
+        e.preventDefault();
         setCargando(true);
         setErrorMensaje("");
 
-        // 1. Recogemos los datos del formulario
         const formData = new FormData(e.currentTarget);
 
         try {
-            // 2. Llamamos a tu Server Action DIRECTAMENTE (sin useActionState)
-            // Le pasamos null como prevState porque ya no lo usamos
             const result = await postSingIn(null, formData);
 
             if (result?.success) {
-                alert("¡Registro solicitado con éxito!");
-                router.push('/');
+                setMostrarPopUp(true);
+                setTimeout(() => {
+                    setMostrarPopUp(false);
+                    router.push('/');
+                }, 2000);
             } else {
-                setErrorMensaje(result?.message || "Error al solicitar reguistro");
+                setErrorMensaje(result?.message || "Error al solicitar registro");
                 setCargando(false);
             }
         } catch (error) {
@@ -38,6 +38,17 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+            {mostrarPopUp && (
+                <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    <div className="bg-teal-600 text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 border-2 border-teal-400">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-bold">Solicitud realizada con éxito!</span>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
                 <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
                     Solicitar Registro

@@ -24,13 +24,10 @@ export default function SolicitudesDashboard() {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
-    const API_BASE_URL = "";
-
-    // 2. Proteger la ruta y cargar datos
     const token = useAuthStore((state) => state.token);
 
     const rol = useMemo(() => {
-        if (!token) return null; // Si no hay token, no hay rol
+        if (!token) return null;
 
         try {
             const tokenDecodificado = jwtDecode(token) as any;
@@ -43,7 +40,6 @@ export default function SolicitudesDashboard() {
     }, [token]);
 
     useEffect(() => {
-        // Si no hay token o no es Admin, lo echamos de aquí
         if (!token || (rol !== "Admin" && rol !== "ROLE_Admin")) {
             router.push('/');
             return;
@@ -72,10 +68,8 @@ export default function SolicitudesDashboard() {
     }, [token, rol, router]);
 
     const gestionarSolicitud = async (email: string, accion: 'aprobar' | 'rechazar') => {
-        // Optimistic UI: Guardamos el estado anterior por si falla
         const solicitudesAnteriores = [...solicitudes];
 
-        // Quitamos la solicitud de la pantalla instantáneamente para dar sensación de rapidez
         setSolicitudes(solicitudes.filter(s => s.email !== email));
 
         try {
@@ -94,8 +88,6 @@ export default function SolicitudesDashboard() {
                 throw new Error(`Falló al ${accion} el usuario`);
             }
 
-            // Opcional: Mostrar un pequeño toast o notificación de éxito aquí
-
         } catch (error) {
             console.error(error);
             alert(`Hubo un error al intentar ${accion} la solicitud.`);
@@ -103,7 +95,6 @@ export default function SolicitudesDashboard() {
         }
     };
 
-    // 4. Renderizado de Estados (Cargando / Error)
     if (cargando) {
         return (
             <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -122,7 +113,6 @@ export default function SolicitudesDashboard() {
         );
     }
 
-    // 5. Renderizado Principal
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">

@@ -27,7 +27,6 @@ export default function UsuariosActivosDashboard() {
 
     const API_BASE_URL = "http://172.31.245.33:8080/api/admin";
 
-    // 1. Extraer y validar Rol
     const rol = useMemo(() => {
         if (!token) return null;
         try {
@@ -38,7 +37,6 @@ export default function UsuariosActivosDashboard() {
         }
     }, [token]);
 
-    // 2. Cargar Usuarios Activos
     useEffect(() => {
         if (!token || (rol !== "Admin" && rol !== "ROLE_Admin")) {
             router.push('/');
@@ -47,7 +45,6 @@ export default function UsuariosActivosDashboard() {
 
         const cargarUsuarios = async () => {
             try {
-                // 🔴 Necesitarás crear este endpoint en Spring Boot
                 const response = await fetch(`${API_BASE_URL}/usuarios`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -66,9 +63,7 @@ export default function UsuariosActivosDashboard() {
         cargarUsuarios();
     }, [token, rol, router]);
 
-    // 3. Eliminar Usuario
     const eliminarUsuario = async (email: string, nombre: string) => {
-        // Pedimos confirmación antes de borrar a alguien activo
         const confirmacion = window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el acceso de ${nombre} (${email})?`);
         
         if (!confirmacion) return;
@@ -78,7 +73,6 @@ export default function UsuariosActivosDashboard() {
 
         try {
             const emailSeguro = encodeURIComponent(email);
-            // 🔴 Usamos el endpoint DELETE que ya tienes (o uno nuevo si prefieres separarlos)
             const response = await fetch(`${API_BASE_URL}/eliminar/${emailSeguro}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -92,8 +86,7 @@ export default function UsuariosActivosDashboard() {
             setUsuarios(usuariosAnteriores);
         }
     };
-
-    // 4. Filtrar usuarios por el buscador
+    
     const usuariosFiltrados = usuarios.filter(usuario => {
         const termino = busqueda.toLowerCase();
         return (

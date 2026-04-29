@@ -20,10 +20,10 @@ export async function postLogIn(prevState: any, data: FormData) {
 
     const result = await response.json();
 
-    console.log("=== RESPUESTA DE SPRING BOOT ===");
-    console.log("Status:", response.status);
-    console.log("JSON recibido:", result);
-    console.log("================================");
+    //console.log("=== RESPUESTA DE SPRING BOOT ===");
+    //console.log("Status:", response.status);
+    //console.log("JSON recibido:", result);
+    //console.log("================================");
 
     const tokenAcceso = result.tokenAcceso;
     const tokenRefresco = result.tokenRefresco;
@@ -66,17 +66,15 @@ export async function cerrarSesion() {
     return { success: true };
 }
 
-// app/actions/auth.ts
+
 export async function refrescarSesionServidor() {
     const cookieStore = await cookies();
-    // 1. Buscamos la cookie con el nombre exacto que espera Spring Boot
+    
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (!refreshToken) return { success: false };
 
     try {
-        // 2. Llamamos a tu controlador GET /refresh
-        // Pasamos la cookie manualmente en la cabecera
         const response = await fetch('http://172.31.245.33:8080/api/auth/refresh', {
             method: 'GET',
             headers: {
@@ -89,12 +87,11 @@ export async function refrescarSesionServidor() {
 
         const data = await response.json();
 
-        console.log("=== RESPUESTA DE SPRING BOOT ===");
-        console.log("Status:", response.status);
-        console.log("JSON recibido del refresh:", data);
-        console.log("================================");
+        //console.log("=== RESPUESTA DE SPRING BOOT ===");
+        //console.log("Status:", response.status);
+        //console.log("JSON recibido del refresh:", data);
+        //console.log("================================");
 
-        // 3. Guardamos el nuevo Refresh Token (Rotación)
         cookieStore.set({
             name: 'refreshToken',
             value: data.tokenRefresco,
@@ -102,7 +99,6 @@ export async function refrescarSesionServidor() {
             path: '/'
         });
 
-        // 4. Devolvemos el nuevo Access Token al cliente
         return { success: true, token: data.tokenAcceso };
 
     } catch (error) {

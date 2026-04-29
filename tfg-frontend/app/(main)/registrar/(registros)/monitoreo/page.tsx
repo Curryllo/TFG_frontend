@@ -6,7 +6,6 @@ import { revalidarMapas, revalidarGraficos } from '@/app/(main)/registrar/action
 
 export default function MonitoreoForm() {
 
-    const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
@@ -20,7 +19,6 @@ export default function MonitoreoForm() {
 
         const formData = new FormData(e.currentTarget);
 
-        // 1. Preparamos el objeto con los datos del formulario
         const datosMonitoreo = {
             lugarRecogida: formData.get('lugar'),
             latitud: formData.get('latitud') ? Number(formData.get('latitud')) : null,
@@ -78,7 +76,6 @@ export default function MonitoreoForm() {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/*<input type="hidden" name="accessToken" value={token || ''} />*/}
 
                     {/* Lugar */}
                     <div>
@@ -240,17 +237,6 @@ export default function MonitoreoForm() {
                     </p>
                 )}
 
-                {/*
-                <div className="pt-4 flex justify-end">
-                    <button
-                        type="submit"
-                        disabled={!isAnyLugar}
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                        Guardar Registro
-                    </button>
-                </div>
-                */}
                 <div className="pt-4 flex justify-end">
                     <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         {estado.cargando ? 'Enviando...' : 'Guardar Registro'}

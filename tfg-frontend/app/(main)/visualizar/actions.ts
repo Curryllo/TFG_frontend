@@ -26,7 +26,6 @@ export async function getDatosMontireo() {
 
         if (!str) throw new Error("Archivo CSV vacío o no encontrado");
 
-        // Parseamos el CSV a JSON
         const parsed = Papa.parse(str, {
             header: true, // Usa la primera fila como claves del JSON
             dynamicTyping: true, // Convierte números automáticamente
@@ -76,7 +75,6 @@ export async function getDatosHumanos() {
 
         if (!str) throw new Error("Archivo CSV vacío o no encontrado");
 
-        // Parseamos el CSV a JSON
         const parsed = Papa.parse(str, {
             header: true, // Usa la primera fila como claves del JSON
             dynamicTyping: true, // Convierte números automáticamente
@@ -145,7 +143,7 @@ export async function getDatosGarrapatas() {
             enAnimal: item.animal || 'Desconocido'
         }));
         
-        console.log("Datos garrapatas procesados:", datosLimpios);
+        //console.log("Datos garrapatas procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
 
     } catch (error) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Activity, Bug, Eye } from 'lucide-react';
 import EstrategiaHumanos from '@/components/EstrategiaHumanos';
@@ -29,7 +29,6 @@ export default function VisualizacionMapas() {
                 <div className="flex justify-between items-end">
                     <h1 className="text-3xl font-bold text-gray-900">Mapas Disponibles</h1>
                     
-                    {/* SELECTOR DE ESTRATEGIA */}
                     <div className="flex bg-white rounded-lg p-1 shadow-sm border border-gray-200">
                         <button
                             onClick={() => setEstrategia('humanos')}
@@ -61,7 +60,6 @@ export default function VisualizacionMapas() {
                     </div>
                 </div>
 
-                {/* RENDERIZADO CONDICIONAL BASADO EN LA ESTRATEGIA */}
                 <div className="mt-6">
                     {estrategia === 'humanos' && <EstrategiaHumanos />}
                     {estrategia === 'vectores' && <EstrategiaMonitoreo />}

@@ -7,15 +7,11 @@ import { peticionAutenticada } from '@/services/api';
 export default function DataVisualization() {
 
     const handleDescarga = async () => {
-        // 1. Definimos los archivos que queremos descargar
         const archivos = ['datosLimpios.csv', 'datosLimpiosGarrapatas.csv', 'datosLimpiosHumanos.csv'];
 
         try {
-            // 2. Usamos un bucle for...of (es importante usar este y no forEach 
-            // para que respete los await)
             for (const archivo of archivos) {
 
-                // Pedimos la URL para este archivo en concreto
                 const response = await peticionAutenticada(`/descargaDatos/csv?archivo=${archivo}`, {
                     method: 'GET'
                 });
@@ -27,13 +23,12 @@ export default function DataVisualization() {
                         // Forzamos la descarga
                         const a = document.createElement('a');
                         a.href = data.url;
-                        a.download = archivo; // Le ponemos su nombre real
+                        a.download = archivo;
                         document.body.appendChild(a);
                         a.click();
                         a.remove();
 
-                        // VITAL: Hacemos una micropausa de medio segundo entre descargas
-                        // Esto evita que el navegador colapse o bloquee las descargas por "spam"
+                        //Evitar bloqueos de navegador
                         await new Promise(resolve => setTimeout(resolve, 500));
                     }
                 } else {

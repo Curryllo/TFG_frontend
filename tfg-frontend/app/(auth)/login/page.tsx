@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { postLogIn } from "@/app/(auth)/actions/auth"; // Tu Server Action
+import { postLogIn } from "@/app/(auth)/actions/auth";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
@@ -11,24 +11,19 @@ export default function LoginPage() {
     const [errorMensaje, setErrorMensaje] = useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Evitamos que la página se recargue
+        e.preventDefault();
         setCargando(true);
         setErrorMensaje("");
 
-        // 1. Recogemos los datos del formulario
         const formData = new FormData(e.currentTarget);
 
         try {
-            // 2. Llamamos a tu Server Action DIRECTAMENTE (sin useActionState)
-            // Le pasamos null como prevState porque ya no lo usamos
             const result = await postLogIn(null, formData);
 
             if (result?.success && result?.token) {
-                console.log("¡TOKEN LIMPIO RECIBIDO EN REACT!:", result.token);
-                // 3. Lo guardamos en Zustand
+                //console.log("¡TOKEN LIMPIO RECIBIDO EN REACT!:", result.token);
                 setToken(result.token);
                 router.refresh();
-                // 4. Redirigimos
                 router.push('/');
             } else {
                 setErrorMensaje(result?.message || "Error al iniciar sesión");
@@ -51,7 +46,6 @@ export default function LoginPage() {
                     Para acceder al sistema, por favor ingrese sus credenciales.
                 </p>
 
-                {/* 🔴 CAMBIO AQUÍ: Usamos onSubmit en lugar de action */}
                 <form className="space-y-6" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">
@@ -79,7 +73,6 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    {/* Mensaje de error si falla el login */}
                     {errorMensaje && (
                         <p className="text-red-500 text-sm font-semibold text-center">{errorMensaje}</p>
                     )}

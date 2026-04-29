@@ -8,18 +8,14 @@ import countries from "i18n-iso-countries";
 import esLocale from "i18n-iso-countries/langs/es.json";
 import { revalidarMapas, revalidarGraficos } from '@/app/(main)/registrar/actions';
 
-// 1. Registramos el idioma para los países
 countries.registerLocale(esLocale);
 
 export default function HumanosForm() {
-    const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
-    // 2. Estado para almacenar el valor del react-select
     const [paisSeleccionado, setPaisSeleccionado] = useState<{value: string, label: string} | null>(null);
 
-    // 3. Generamos la lista de países para el buscador
     const opcionesPaises = useMemo(() => {
         const paisesObj = countries.getNames("es", { select: "official" });
         return Object.entries(paisesObj)
@@ -36,13 +32,12 @@ export default function HumanosForm() {
 
         const formData = new FormData(e.currentTarget);
 
-        // Como usamos un input oculto para el país, esto recogerá su valor perfectamente
         const datosHumanos = {
             edad: Number(formData.get('edad')),
             sexo: formData.get('sexo'),
             fechaCaso: formData.get('fechaCaso'),
             enfermedad: formData.get('enfermedad'),
-            pais: formData.get('pais'), // <--- Recogerá el valor del input hidden
+            pais: formData.get('pais'),
             provinciaResidencia: formData.get('provinciaResidencia'),
             municipioResidencia: formData.get('municipioResidencia'),
             defuncion: formData.get('defuncion') === 'on',
@@ -165,7 +160,7 @@ export default function HumanosForm() {
                         </select>
                     </div>
 
-                    {/* === PAÍS DE INFECCIÓN CON BUSCADOR === */}
+                    {/* País de Infección */}
                     <div>
                         <label htmlFor="pais-select" className="block text-sm font-medium text-gray-600 mb-1">
                             País de Infección *
@@ -191,8 +186,6 @@ export default function HumanosForm() {
                                 menu: (base) => ({ ...base, zIndex: 50 }) // Para que el desplegable pase por encima de otros campos
                             }}
                         />
-                        {/* INPUT OCULTO: Este es el que lee tu FormData en el handleSubmit */}
-                        {/* Nota: Envía el nombre del país en español. Si prefieres enviar el código ISO (ESP), cambia .label por .value */}
                         <input 
                             type="hidden" 
                             name="pais" 

@@ -9,7 +9,6 @@ export default function AnimalesForm() {
 
     const [mostrarPopUp, setMostrarPopUp] = useState(false);
 
-    const router = useRouter();
     const [estado, setEstado] = useState({ cargando: false, error: "" });
 
     const [tieneAnimal, setTieneAnimal] = useState(false);
@@ -22,7 +21,6 @@ export default function AnimalesForm() {
 
         const formData = new FormData(e.currentTarget);
 
-        // 1. Preparamos el objeto con los datos del formulario
         const datosGarrapatas = {
             municipio: formData.get('municipio'),
             especie: formData.get('especie'),
@@ -74,8 +72,6 @@ export default function AnimalesForm() {
 
             <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="flex flex-row gap-6">
-                    {/*<input type="hidden" name="accessToken" value={token || ''} />*/}
-
                     <div>
                         <label htmlFor="municipio" className="block text-sm font-medium text-gray-600 mb-1">
                             Municipio *
@@ -163,7 +159,7 @@ export default function AnimalesForm() {
                                 disabled={tieneHumano}
                                 onChange={(e) => setTieneAnimal(e.target.value !== '')}
                                 className="w-full px-4 py-2 text-gray-600 font-medium border border-gray-300 rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-solid focus:outline-teal-200 transition-colors"
-                            >   
+                            >
                                 <option value="">Ninguno</option>
                                 <option value="Cabra Montés" className="text-gray-600">Cabra Montés</option>
                                 <option value="Ciervo" className="text-gray-600">Ciervo</option>
@@ -174,17 +170,6 @@ export default function AnimalesForm() {
                         </div>
                     </div>
                 </div>
-
-                {/*
-                <div className="pt-4 flex justify-end">
-                    <button
-                        type="submit"
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                        Guardar Registro
-                    </button>
-                </div>
-                */}
                 <div className="pt-4 flex justify-end">
                     <button type="submit" disabled={estado.cargando} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         {estado.cargando ? 'Enviando...' : 'Guardar Registro'}
