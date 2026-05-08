@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AgCharts } from 'ag-charts-react';
 import { AgChartOptions } from 'ag-charts-community';
-import { getDatosHumanos } from "@/app/(main)/visualizar/actions";
 
-const ChartPaisesBarrasCasos = () => {
-
-    const [datosCrudos, setDatosCrudos] = useState<any[]>([]);
-    const [enfermedades, setEnfermedades] = useState<string[]>([]);
+const ChartPaisesBarrasCasos = ({ data }: { data: any[] }) => {
     const [enfermedadSeleccionada, setEnfermedadSeleccionada] = useState<string>('Todas');
+
+    const enfermedades = useMemo(() => {
+        if (!data) return [];
+        const listaEnfermedades = data.map((caso: any) => caso.enfermedad || 'Desconocida');
+        return Array.from(new Set(listaEnfermedades)) as string[];
+    }, [data]);
 
     const [options, setOptions] = useState<AgChartOptions>({
         title: {
@@ -27,36 +29,13 @@ const ChartPaisesBarrasCasos = () => {
         ],
     });
 
+    
     useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosHumanos();
-                if (respuesta.success && respuesta.data) {
-                    setDatosCrudos(respuesta.data);
-
-                    const listaEnfermedades = respuesta.data.map((caso: any) => caso.enfermedad || 'Desconocida');
-                    const enfermedadesUnicas = Array.from(new Set(listaEnfermedades)) as string[];
-                    setEnfermedades(enfermedadesUnicas);
-
-                    console.log("Enfermedades cargadas de forma única:", enfermedadesUnicas);
-
-                } else {
-                    console.warn("No se pudieron cargar los datos de monitoreo o la respuesta no fue exitosa.", respuesta);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos de monitoreo:", error);
-            }
-        };
-
-        cargarDatos();
-    }, []);
-
-    useEffect(() => {
-        if (datosCrudos.length === 0) return;
+        if (data.length === 0) return;
 
         const datosFiltrados = enfermedadSeleccionada === 'Todas'
-            ? datosCrudos
-            : datosCrudos.filter(caso => (caso.enfermedad || 'Desconocida') === enfermedadSeleccionada);
+            ? data
+            : data.filter(caso => (caso.enfermedad || 'Desconocida') === enfermedadSeleccionada);
 
         const conteoPorPais = datosFiltrados.reduce((acumulador: any, caso: any) => {
             const pais = caso.pais || 'Desconocido';
@@ -79,7 +58,7 @@ const ChartPaisesBarrasCasos = () => {
             }
         }));
 
-    }, [datosCrudos, enfermedadSeleccionada]);
+    }, [data, enfermedadSeleccionada]);
 
     return (
         <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">

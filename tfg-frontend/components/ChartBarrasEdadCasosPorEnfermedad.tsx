@@ -1,14 +1,17 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AgCharts } from 'ag-charts-react';
 import { AgChartOptions } from 'ag-charts-community';
-import { getDatosHumanos } from "@/app/(main)/visualizar/actions";
 
-const ChartBarrasEdadPorEnfermedad = () => {
-    const [datosCrudos, setDatosCrudos] = useState<any[]>([]);
+const ChartBarrasEdadPorEnfermedad = ({ data }: { data: any[] }) => {
     const [enfermedadSeleccionada, setEnfermedadSeleccionada] = useState<string>("Todas");
-    const [enfermedades, setEnfermedades] = useState<string[]>([]);
+
+    const enfermedades = useMemo(() => {
+        if (!data) return [];
+        const listaEnfermedades = data.map((caso: any) => caso.enfermedad || 'Desconocida');
+        return Array.from(new Set(listaEnfermedades)) as string[];
+    }, [data]);
 
     const [options, setOptions] = useState<AgChartOptions>({
         title: { text: "Distribución por Edad" },
@@ -27,39 +30,15 @@ const ChartBarrasEdadPorEnfermedad = () => {
         ]
     });
 
-    // 1. Cargar datos iniciales
     useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const respuesta = await getDatosHumanos();
-                if (respuesta.success && respuesta.data) {
-                    setDatosCrudos(respuesta.data);
+        if (data.length === 0 || !enfermedadSeleccionada) return;
 
-                    // Extraer lista única de enfermedades para el selector
-                    const lista = respuesta.data.map((caso: any) =>
-                        caso.enfermedad ? caso.enfermedad.trim() : 'Desconocida'
-                    );
-                    const unicas = Array.from(new Set(lista)) as string[];
-                    setEnfermedades(unicas);
-                }
-            } catch (error) {
-                console.error("Error al cargar los datos:", error);
-            }
-        };
-        cargarDatos();
-    }, []);
-
-    // 2. Procesar datos cada vez que cambie la enfermedad o los datos crudos
-    useEffect(() => {
-        if (datosCrudos.length === 0 || !enfermedadSeleccionada) return;
-
-        const casosFiltrados = enfermedadSeleccionada === "Todas" 
-            ? datosCrudos 
-            : datosCrudos.filter(caso =>
+        const casosFiltrados = enfermedadSeleccionada === "Todas"
+            ? data
+            : data.filter(caso =>
                 (caso.enfermedad?.trim() || 'Desconocida') === enfermedadSeleccionada
-              );
+            );
 
-        // Estructura base de rangos
         const agrupacionEdades: Record<string, any> = {
             "0-14": { rango: "0-14", cantidad: 0, orden: 1 },
             "15-24": { rango: "15-24", cantidad: 0, orden: 2 },
@@ -70,7 +49,6 @@ const ChartBarrasEdadPorEnfermedad = () => {
             "65+": { rango: "65+", cantidad: 0, orden: 7 },
         };
 
-        // Contar casos por rango
         casosFiltrados.forEach(caso => {
             let claveRango = "65+";
             if (caso.edad <= 14) claveRango = "0-14";
@@ -95,7 +73,7 @@ const ChartBarrasEdadPorEnfermedad = () => {
             }
         }));
 
-    }, [enfermedadSeleccionada, datosCrudos]);
+    }, [enfermedadSeleccionada, data]);
 
     return (
         <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">

@@ -19,25 +19,24 @@ const ChartRelacionAñoSexoCasos = () => {
             {
                 type: "line",
                 xKey: "año",
-                yKey: "ambos", // <-- Clave única para el total
+                yKey: "ambos",
                 yName: "Ambos",
             },
             {
                 type: "line",
                 xKey: "año",
-                yKey: "hombres", // <-- Clave única para hombres
+                yKey: "hombres",
                 yName: "Hombres",
             },
             {
                 type: "line",
                 xKey: "año",
-                yKey: "mujeres", // <-- Clave única para mujeres
+                yKey: "mujeres",
                 yName: "Mujeres",
             },
         ],
     });
 
-    // 1. Efecto para cargar los datos crudos UNA sola vez al montar el componente
     useEffect(() => {
         const cargarDatos = async () => {
             try {
@@ -46,7 +45,6 @@ const ChartRelacionAñoSexoCasos = () => {
                 if (respuesta.success && respuesta.data) {
                     setDatosCrudos(respuesta.data);
                     
-                    // Opcional: Extraer enfermedades únicas para un futuro desplegable (Select)
                     const enfUnicas = Array.from(new Set(respuesta.data.map((d: any) => d.enfermedad)));
                     setEnfermedades(['Todas', ...(enfUnicas as string[])]);
                 } else {
@@ -60,20 +58,17 @@ const ChartRelacionAñoSexoCasos = () => {
         cargarDatos();
     }, []);
 
-    // 2. Efecto para procesar los datos cada vez que cambian los datos crudos o el filtro
     useEffect(() => {
         if (datosCrudos.length === 0) return;
 
-        // Filtrar por enfermedad si es necesario
+        
         const datosFiltrados = enfermedadSeleccionada === 'Todas' 
             ? datosCrudos 
             : datosCrudos.filter(item => item.enfermedad === enfermedadSeleccionada);
 
-        // Agrupar y contar por año y sexo
         const datosAgrupados: Record<string, { año: string, hombres: number, mujeres: number, ambos: number }> = {};
 
         datosFiltrados.forEach(item => {
-            // Extraer solo el año de "YYYY-MM-DD"
             const año = item.fechacaso ? item.fechacaso.substring(0, 4) : 'Desconocido';
             
             if (año === 'Desconocido' || año === '') return; // Ignorar casos sin fecha
@@ -82,10 +77,8 @@ const ChartRelacionAñoSexoCasos = () => {
                 datosAgrupados[año] = { año: año, hombres: 0, mujeres: 0, ambos: 0 };
             }
 
-            // Sumar al total
             datosAgrupados[año].ambos += 1;
 
-            // Sumar por sexo
             if (item.sexo === 'H') {
                 datosAgrupados[año].hombres += 1;
             } else if (item.sexo === 'M') {
@@ -93,10 +86,8 @@ const ChartRelacionAñoSexoCasos = () => {
             }
         });
 
-        // Convertir el objeto a un array y ordenarlo por año de menor a mayor
         const chartData = Object.values(datosAgrupados).sort((a, b) => a.año.localeCompare(b.año));
 
-        // Actualizar el gráfico
         setOptions(opcionesPrevias => ({
             ...opcionesPrevias,
             data: chartData
@@ -106,7 +97,6 @@ const ChartRelacionAñoSexoCasos = () => {
 
     return (
         <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">
-            {/* Opcional: Un selector básico para probar el filtro de enfermedades */}
             <div style={{ marginBottom: '1rem' }}>
                 <label className="font-semibold text-gray-700">Filtrar por enfermedad: </label>
                 <select 

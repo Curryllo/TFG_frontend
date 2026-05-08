@@ -228,15 +228,7 @@ export default function HumanosForm() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <label className="flex items-center space-x-3 cursor-pointer">
-                        <input
-                            type="checkbox"
-                            id="defuncion"
-                            name="defuncion"
-                            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:outline-teal-200"
-                        />
-                        <span className="text-gray-600 font-medium">Hubo defunción</span>
-                    </label>
+                    
 
                     <label className="flex items-center space-x-3 cursor-pointer">
                         <input
@@ -246,6 +238,16 @@ export default function HumanosForm() {
                             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:outline-teal-200"
                         />
                         <span className="text-gray-600 font-medium">Caso Hospitalizado</span>
+                    </label>
+
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            id="defuncion"
+                            name="defuncion"
+                            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:outline-teal-200"
+                        />
+                        <span className="text-gray-600 font-medium">Hubo defunción</span>
                     </label>
                 </div>
 
