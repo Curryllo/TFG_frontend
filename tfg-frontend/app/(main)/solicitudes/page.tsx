@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle, XCircle, Briefcase, Mail, User } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import { useMemo } from "react";
+import { peticionAutenticada } from "@/services/api";
 
 interface Solicitud {
     nombre: string;
@@ -47,7 +48,7 @@ export default function SolicitudesDashboard() {
 
         const cargarSolicitudes = async () => {
             try {
-                const response = await fetch(`http://172.31.245.33:8080/api/admin/solicitudes`, {
+                const response = await peticionAutenticada('/admin/solicitudes', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -74,10 +75,9 @@ export default function SolicitudesDashboard() {
 
         try {
             const emailSeguro = encodeURIComponent(email);
-            const url = `http://172.31.245.33:8080/api/admin/solicitudes/${emailSeguro}/${accion}`;
             const method = accion === 'aprobar' ? 'POST' : 'DELETE';
 
-            const response = await fetch(url, {
+            const response = await peticionAutenticada(`/admin/solicitudes/${emailSeguro}/${accion}`, {
                 method: method,
                 headers: {
                     'Authorization': `Bearer ${token}`

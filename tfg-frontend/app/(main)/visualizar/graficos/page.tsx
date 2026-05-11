@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { getDatosHumanos, getDatosMontireo, getDatosGarrapatas } from "@/app/(main)/visualizar/actions";
 import ChartGravedadEdad from "@/components/ChartBarrasEdadCasos";
@@ -35,6 +35,10 @@ export default function VisualizacionGraficos() {
 
     const [year, setYear] = useState('Todos');
     const [loading, setLoading] = useState(true);
+
+    const [mostrarHumanos, setMostrarHumanos] = useState(false);
+    const [mostrarMonitoreo, setMostrarMonitoreo] = useState(false);
+    const [mostrarGarrapatas, setMostrarGarrapatas] = useState(false);
 
     useEffect(() => {
         const cargarDatos = async () => {
@@ -85,7 +89,7 @@ export default function VisualizacionGraficos() {
     if (loading) return <div className="min-h-screen flex items-center justify-center">Cargando datos...</div>;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="flex-1 bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4">
             <div className="max-w-6xl w-full">
                 <Link href="/visualizar" className="block">
                     <div className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors">
@@ -112,42 +116,63 @@ export default function VisualizacionGraficos() {
 
 
                 <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-2 my-2">
-                    <div className="p-4 border-b border-gray-100">
+                    <button
+                        onClick={() => setMostrarHumanos(!mostrarHumanos)}
+                        className="w-full p-4 border-b border-gray-100 flex justify-between items-center bg-white hover:bg-gray-50 transition-colors"
+                    >
                         <h2 className="text-xl font-bold text-gray-900">Análisis de Casos Humanos</h2>
-                    </div>
-                    <div className="p-4 border-b w-full">
-                        <h3 className="text-lg font-bold text-gray-900">Número de casos por países</h3>
-                        <ChartPaisesBarrasCasos data={datosHumanosFiltrados} />
-                        <h3 className="text-lg font-bold text-gray-900">Origen de los casos</h3>
-                        <ChartOrigenPieCasos data={datosHumanosFiltrados}/>
-                        <h3 className="text-lg font-bold text-gray-900">Grupos de edad</h3>
-                        <ChartGravedadEdad data={datosHumanosFiltrados}/>
-                        <ChartBarrasEdadPorEnfermedad data={datosHumanosFiltrados}/>
-                        <h3 className="text-lg font-bold text-gray-900">Relación Año-Sexo</h3>
-                        <ChartRelacionAñoSexoCasos />
-                    </div>
+                        {mostrarHumanos ? <ChevronUp className="w-6 h-6 text-gray-500" /> : <ChevronDown className="w-6 h-6 text-gray-500" />}
+                    </button>
+                    {mostrarHumanos && (
+                        <div className="p-4 border-b w-full">
+                            <h3 className="text-lg font-bold text-gray-900">Número de casos por países</h3>
+                            <ChartPaisesBarrasCasos data={datosHumanosFiltrados} />
+                            <h3 className="text-lg font-bold text-gray-900">Origen de los casos</h3>
+                            <ChartOrigenPieCasos data={datosHumanosFiltrados} />
+                            <h3 className="text-lg font-bold text-gray-900">Grupos de edad</h3>
+                            <ChartGravedadEdad data={datosHumanosFiltrados} />
+                            <ChartBarrasEdadPorEnfermedad data={datosHumanosFiltrados} />
+                            <h3 className="text-lg font-bold text-gray-900">Relación Año-Sexo</h3>
+                            <ChartRelacionAñoSexoCasos />
+                        </div>
+                    )}
+
                 </div>
 
                 <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-2">
-                    <div className="p-4 border-b border-gray-100">
+                    <button
+                        onClick={() => setMostrarMonitoreo(!mostrarMonitoreo)}
+                        className="w-full p-4 border-b border-gray-100 flex justify-between items-center bg-white hover:bg-gray-50 transition-colors"
+                    >
                         <h2 className="text-xl font-bold text-gray-900">Análisis de Monitoreo Entomológico</h2>
-                    </div>
-                    <div className="w-full">
-                        <IndicadorVectores data={datosMonitoreoFiltrados}/>
-                        <ChartVectoresBarras data={datosMonitoreoFiltrados}/>
-                        <CharVectoresAnillo data={datosMonitoreoFiltrados}/>
-                    </div>
+                        {mostrarMonitoreo ? <ChevronUp className="w-6 h-6 text-gray-500" /> : <ChevronDown className="w-6 h-6 text-gray-500" />}
+                    </button>
+                    {mostrarMonitoreo && (
+                        <div className="w-full">
+                            <IndicadorVectores data={datosMonitoreoFiltrados} />
+                            <ChartVectoresBarras data={datosMonitoreoFiltrados} />
+                            <CharVectoresAnillo data={datosMonitoreoFiltrados} />
+                        </div>
+                    )}
                 </div>
 
+
                 <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div className="p-4 border-b border-gray-100">
+                    <button
+                        onClick={() => setMostrarGarrapatas(!mostrarGarrapatas)}
+                        className="w-full p-4 border-b border-gray-100 flex justify-between items-center bg-white hover:bg-gray-50 transition-colors"
+                    >
                         <h2 className="text-xl font-bold text-gray-900">Análisis de Garrapatas</h2>
-                    </div>
-                    <div className="w-full">
-                        <ChartBarrasGarrapatas data={datosGarrapatasFiltrados}/>
-                        <ChartBarrasFechaGarrapatas data={datosGarrapatasFiltrados}/>
-                        <ChartDonutEspeciesGarrapatas data={datosGarrapatasFiltrados}/>
-                    </div>
+                        {mostrarGarrapatas ? <ChevronUp className="w-6 h-6 text-gray-500" /> : <ChevronDown className="w-6 h-6 text-gray-500" />}
+                    </button>
+                    {mostrarGarrapatas && (
+                        <div className="w-full">
+                            <ChartBarrasGarrapatas data={datosGarrapatasFiltrados} />
+                            <ChartBarrasFechaGarrapatas data={datosGarrapatasFiltrados} />
+                            <ChartDonutEspeciesGarrapatas data={datosGarrapatasFiltrados} />
+                        </div>
+                    )}
+
                 </div>
             </div>
         </div>

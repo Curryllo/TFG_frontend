@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { Trash2, Search, UserCheck, Shield, User as UserIcon } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
+import { peticionAutenticada } from "@/services/api";
 
 interface UsuarioActivo {
     nombre: string;
@@ -25,8 +26,6 @@ export default function UsuariosActivosDashboard() {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
-    const API_BASE_URL = "http://172.31.245.33:8080/api/admin";
-
     const rol = useMemo(() => {
         if (!token) return null;
         try {
@@ -45,7 +44,7 @@ export default function UsuariosActivosDashboard() {
 
         const cargarUsuarios = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/usuarios`, {
+                const response = await peticionAutenticada('/admin/usuarios', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -73,7 +72,7 @@ export default function UsuariosActivosDashboard() {
 
         try {
             const emailSeguro = encodeURIComponent(email);
-            const response = await fetch(`${API_BASE_URL}/eliminar/${emailSeguro}`, {
+            const response = await peticionAutenticada(`/api/eliminar/${emailSeguro}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -120,7 +119,7 @@ export default function UsuariosActivosDashboard() {
                             placeholder="Buscar por nombre, email o puesto..."
                             value={busqueda}
                             onChange={(e) => setBusqueda(e.target.value)}
-                            className="pl-10 pr-4 py-2 w-full md:w-80 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow outline-none"
+                            className="pl-10 pr-4 py-2 w-full md:w-80 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow outline-none text-black"
                         />
                     </div>
                 </div>

@@ -17,7 +17,7 @@ export default function VisualizacionMapas() {
 
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
+        <div className="flex-1 from-purple-50 to-indigo-100 p-4">
             <div className="max-w-6xl mx-auto space-y-6">
                 <Link href="/visualizar" className="block">
                     <div className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors">
