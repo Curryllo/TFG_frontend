@@ -39,7 +39,7 @@ export default function NavBar() {
             <div>
                 <button
                     onClick={() => router.push('/')}
-                    className="flex items-center justify-self-start gap-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium"
+                    className="flex items-center justify-self-start gap-2 bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium"
                 >
                     <House className="w-4 h-4" />
                     Inicio
@@ -51,7 +51,7 @@ export default function NavBar() {
                 {rol === "ROLE_Admin" && (
                     <button
                         onClick={() => router.push('/solicitudes')}
-                        className="justify-self-end bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 text-sm font-medium"
+                        className="justify-self-end bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 text-sm font-medium"
                     >
                         Gestionar Solicitudes
                     </button>
@@ -60,7 +60,7 @@ export default function NavBar() {
                 {rol === "ROLE_Admin" && (
                     <button
                         onClick={() => router.push('/usuarios')}
-                        className="justify-self-end bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 text-sm font-medium"
+                        className="justify-self-end bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 text-sm font-medium"
                     >
                         Usuarios Activos
                     </button>

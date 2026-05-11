@@ -101,7 +101,7 @@ export default function UsuariosActivosDashboard() {
     if (error) return <div className="p-8 text-red-500 font-medium text-center">{error}</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="flex-1 from-purple-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
                 
                 {/* Cabecera y Buscador */}

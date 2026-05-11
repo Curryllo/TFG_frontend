@@ -5,7 +5,7 @@ import { ArrowLeft, UsersRound, Bug, PawPrint, Eye } from 'lucide-react';
 export default function RegistrationTypeSelection() {
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
             <div className="max-w-4xl w-full">
                 <Link href="/" className="block">
                     <div className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors">
