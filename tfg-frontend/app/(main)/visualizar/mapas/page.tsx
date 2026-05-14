@@ -2,15 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Activity, Bug, Eye } from 'lucide-react';
+import { ArrowLeft, Activity, Bug, Eye, Map } from 'lucide-react';
 import EstrategiaHumanos from '@/components/EstrategiaHumanos';
 import EstrategiaMonitoreo from '@/components/EstrategiaMonitoreo';
 import EstrategiaGarrapatas from '@/components/EstrategiaGarrapatas';
+import EstrategiaCalor from '@/components/EstrategiaCalor';
 
 
 
 
-type TipoEstrategia = 'humanos' | 'vectores' | 'garrapatas';
+type TipoEstrategia = 'humanos' | 'vectores' | 'garrapatas' | 'calor';
 
 export default function VisualizacionMapas() {
     const [estrategia, setEstrategia] = useState<TipoEstrategia>('humanos');
@@ -33,7 +34,7 @@ export default function VisualizacionMapas() {
                         <button
                             onClick={() => setEstrategia('humanos')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                                estrategia === 'humanos' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:bg-gray-100'
+                                estrategia === 'humanos' ? 'bg-blue-500 text-white' : 'text-gray-500 hover:bg-blue-100'
                             }`}
                         >
                             <Activity className="w-4 h-4" />
@@ -42,7 +43,7 @@ export default function VisualizacionMapas() {
                         <button
                             onClick={() => setEstrategia('vectores')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                                estrategia === 'vectores' ? 'bg-teal-100 text-teal-700' : 'text-gray-500 hover:bg-gray-100'
+                                estrategia === 'vectores' ? 'bg-blue-500 text-white' : 'text-gray-500 hover:bg-blue-100'
                             }`}
                         >
                             <Eye className="w-4 h-4" />
@@ -51,11 +52,20 @@ export default function VisualizacionMapas() {
                         <button
                             onClick={() => setEstrategia('garrapatas')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                                estrategia === 'garrapatas' ? 'bg-teal-100 text-teal-700' : 'text-gray-500 hover:bg-gray-100'
+                                estrategia === 'garrapatas' ? 'bg-blue-500 text-white' : 'text-gray-500 hover:bg-blue-100'
                             }`}
                         >
                             <Bug className="w-4 h-4" />
                             Garrapatas
+                        </button>
+                        <button
+                            onClick={() => setEstrategia('calor')}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
+                                estrategia === 'calor' ? 'bg-blue-500 text-white' : 'text-gray-500 hover:bg-blue-100'
+                            }`}
+                        >
+                            <Map className="w-4 h-4" />
+                            Calor
                         </button>
                     </div>
                 </div>
@@ -64,6 +74,7 @@ export default function VisualizacionMapas() {
                     {estrategia === 'humanos' && <EstrategiaHumanos />}
                     {estrategia === 'vectores' && <EstrategiaMonitoreo />}
                     {estrategia === 'garrapatas' && <EstrategiaGarrapatas />}
+                    {estrategia === 'calor' && <EstrategiaCalor />}
                 </div>
             </div>
         </div>

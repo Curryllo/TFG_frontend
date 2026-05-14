@@ -42,7 +42,6 @@ export default function NavBar() {
                     className="flex items-center justify-self-start gap-2 bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium"
                 >
                     <House className="w-4 h-4" />
-                    Inicio
                 </button>
             </div>
 
@@ -72,7 +71,7 @@ export default function NavBar() {
                         className="justify-self-end flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm font-medium"
                     >
                         <LogOut className="w-4 h-4" />
-                        Cerrar sesión
+                        
                     </button>
                 )}
             </div>

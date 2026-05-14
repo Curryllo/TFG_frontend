@@ -1,4 +1,3 @@
-// types/map.ts
 export interface DatoVectorHumano {
     edad: number;
     sexo: string;
@@ -11,7 +10,6 @@ export interface DatoVectorHumano {
     hospitalizado: boolean;
 }
 
-// ESTA ES LA ESTRATEGIA: Todo mapa debe aceptar estas props
 export interface MapVisualizationStrategyProps {
     data: DatoVectorHumano[];
 }
