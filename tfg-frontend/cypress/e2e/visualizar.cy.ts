@@ -18,6 +18,7 @@ describe('Carga de visualizaciones', () => {
   cy.contains('Casos Humanos').should('be.visible')
   cy.contains('Monitoreo Entomológico').should('be.visible')
   cy.contains('Garrapatas').should('be.visible')
+  cy.contains('Calor').should('be.visible')
 })
 
 })

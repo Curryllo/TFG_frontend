@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft, UsersRound, Bug, PawPrint, Eye } from 'lucide-react';
+import DropZone from '@/components/DropZone';
 
 
 export default function RegistrationTypeSelection() {
