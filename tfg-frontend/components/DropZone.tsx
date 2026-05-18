@@ -81,6 +81,9 @@ export default function DropZone({ tipo }: DropZoneProp) {
             if (nombreArchivo.includes("dengue")) enfermedadDetectada = "Dengue";
             if (nombreArchivo.includes("paludismo")) enfermedadDetectada = "Paludismo";
             if (nombreArchivo.includes("leishmaniasis")) enfermedadDetectada = "Leishmaniasis";
+            if (nombreArchivo.includes("lyme")) enfermedadDetectada = "Enfermedad de Lyme";
+            if (nombreArchivo.includes("mediterránea")) enfermedadDetectada = "Fiebre exantemática mediterránea";
+            if (nombreArchivo.includes("tularemia")) enfermedadDetectada = "Tularemia";
             Papa.parse(archivo, {
                 header: true,
                 dynamicTyping: true,
@@ -157,7 +160,7 @@ export default function DropZone({ tipo }: DropZoneProp) {
             } catch (error) {
                 console.log("Error: ", error);
             }
-        } else if(tipo === "garrapatas"){
+        } else if (tipo === "garrapatas") {
             try {
                 const response = await peticionAutenticada('/loteGarrapatas', {
                     method: 'POST',
@@ -179,6 +182,16 @@ export default function DropZone({ tipo }: DropZoneProp) {
 
     return (
         <section className="container mx-auto p-4 space-y-4">
+            {mostrarPopUp && (
+                <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    <div className="bg-teal-600 text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 border-2 border-teal-400">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-bold">¡Registro realizado con éxito!</span>
+                    </div>
+                </div>
+            )}
             <div {...getRootProps({ className: 'dropzone', style: baseStyle })}>
                 <input {...getInputProps()} />
                 <p>Arrastra o haz click para importar CSVs</p>

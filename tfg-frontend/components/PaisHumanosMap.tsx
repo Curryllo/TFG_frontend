@@ -25,19 +25,30 @@ export default function CountryHumansMap({ data }: { data: any[] }) {
     // 2. Agrupar y sumar casos usando el CÓDIGO ISO universal
     const casosPorPaisISO = useMemo(() => {
         const counts: Record<string, number> = {};
-        
+
         data.forEach(item => {
             const nombreBruto = item.pais || '';
             const nombreLimpio = nombreBruto.trim();
-            
+
             if (!nombreLimpio || nombreLimpio === 'Desconocido') {
                 counts['UNKNOWN'] = (counts['UNKNOWN'] || 0) + 1;
                 return; // Saltamos a la siguiente iteración
             }
+            const nombreMinusculas = nombreLimpio.toLowerCase();
+            let isoCode: string | undefined = undefined;
 
             // Convertir el nombre limpio a código ISO
-            const isoCode = countries.getAlpha3Code(nombreLimpio, 'es');
-            
+            if (nombreMinusculas.includes("congo") || nombreMinusculas.includes("rdc")) {
+                isoCode = "COD"; // Forzamos el ISO oficial de la Rep. Dem. del Congo
+            } else if (nombreMinusculas.includes("maldivas")) {
+                isoCode = "MDV"; // Forzamos el ISO de Maldivas
+            } else if (nombreMinusculas.includes("estados unidos") || nombreMinusculas.includes("eeuu")) {
+                isoCode = "USA";
+            } else {
+                // Para el resto de países normales (España, Cuba, etc.), dejamos que la librería haga su trabajo
+                isoCode = countries.getAlpha3Code(nombreLimpio, 'es') || undefined;
+            }
+
             if (isoCode) {
                 counts[isoCode] = (counts[isoCode] || 0) + 1;
             } else {
@@ -45,7 +56,8 @@ export default function CountryHumansMap({ data }: { data: any[] }) {
                 counts['UNKNOWN'] = (counts['UNKNOWN'] || 0) + 1;
             }
         });
-        
+
+        console.log("Distribución final de códigos ISO mapeados:", counts);
         return counts;
     }, [data]);
 
@@ -53,26 +65,26 @@ export default function CountryHumansMap({ data }: { data: any[] }) {
     const maxCasos = Math.max(
         ...Object.entries(casosPorPaisISO)
             .filter(([key]) => key !== 'UNKNOWN')
-            .map(([_, value]) => value), 
+            .map(([_, value]) => value),
         1
     );
 
     // Función para determinar el color basado en la cantidad
     const getColor = (casos: number) => {
-        if (casos === 0) return '#cccccc'; 
-        
+        if (casos === 0) return '#cccccc';
+
         const intensidad = casos / maxCasos;
         return intensidad > 0.8 ? '#800026' :
-               intensidad > 0.6 ? '#BD0026' :
-               intensidad > 0.4 ? '#E31A1C' :
-               intensidad > 0.2 ? '#FC4E2A' :
-               intensidad > 0.1 ? '#FD8D3C' : '#FEB24C';
+            intensidad > 0.6 ? '#BD0026' :
+                intensidad > 0.4 ? '#E31A1C' :
+                    intensidad > 0.2 ? '#FC4E2A' :
+                        intensidad > 0.1 ? '#FD8D3C' : '#FEB24C';
     };
 
     // Estilos y eventos para cada polígono (país)
     const onEachFeature = (feature: any, layer: any) => {
         // El GeoJSON de 'johan' guarda el código ISO en feature.id (Ej: "ESP", "USA")
-        const isoCode = feature.id; 
+        const isoCode = feature.id;
         const nombreOriginal = feature.properties.name; // Nombre nativo del mapa (Inglés)
         const nombreEnEspanol = countries.getName(isoCode, "es") || nombreOriginal;
         const casos = casosPorPaisISO[isoCode] || 0;
@@ -106,8 +118,9 @@ export default function CountryHumansMap({ data }: { data: any[] }) {
     return (
         <MapContainer center={[20, 0]} zoom={2} className="w-full h-full z-0 min-h-[600px]">
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            
-            <GeoJSON 
+
+            <GeoJSON
+                key={JSON.stringify(casosPorPaisISO)}
                 ref={geoJsonRef}
                 data={geoJsonData}
                 style={(feature: any) => {

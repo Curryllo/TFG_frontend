@@ -60,6 +60,8 @@ const ChartPaisesBarrasCasos = ({ data }: { data: any[] }) => {
 
     }, [data, enfermedadSeleccionada]);
 
+    console.log(data);
+
     return (
         <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">
             <div className="px-4 pt-4 flex items-center gap-3">

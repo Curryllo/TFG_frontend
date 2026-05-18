@@ -7,7 +7,7 @@ const ChartOrigenPieCasos  = ({ data }: { data: any[] }) => {
 
     const enfermedades = useMemo(() => {
         if (!data) return [];
-        const listaEnfermedades = data.map((caso: any) => caso.enfermedad || 'Desconocida');
+        const listaEnfermedades = data.map((caso: any) => caso.enfermedad ? caso.enfermedad.trim() : 'Desconocida');
         return Array.from(new Set(listaEnfermedades)) as string[];
     }, [data]);
 
@@ -35,12 +35,21 @@ const ChartOrigenPieCasos  = ({ data }: { data: any[] }) => {
 
         const datosFiltrados = enfermedadSeleccionada === 'Todas'
             ? data
-            : data.filter(caso => (caso.enfermedad || 'Desconocida') === enfermedadSeleccionada);
+            : data.filter(caso => 
+                (caso.enfermedad ? caso.enfermedad.trim() : 'Desconocida') === enfermedadSeleccionada);
 
         const conteoOrigen = datosFiltrados.reduce((acumulador: any, caso: any) => {
             // Limpiamos espacios y verificamos si es España
             const paisLimpio = caso.pais ? caso.pais.trim() : "";
-            const categoria = paisLimpio === "España" ? "Autóctono" : "Importado";
+            let categoria: string;
+            
+            if (paisLimpio === "España") {
+                categoria = "Autóctono";
+            } else if (!paisLimpio || paisLimpio.toLowerCase() === "desconocido") {
+                categoria = "Desconocido";
+            } else {
+                categoria = "Importado";
+            }
 
             // Sumamos al contador de esa categoría
             acumulador[categoria] = (acumulador[categoria] || 0) + 1;

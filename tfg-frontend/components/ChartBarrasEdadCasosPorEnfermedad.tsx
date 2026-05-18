@@ -9,7 +9,7 @@ const ChartBarrasEdadPorEnfermedad = ({ data }: { data: any[] }) => {
 
     const enfermedades = useMemo(() => {
         if (!data) return [];
-        const listaEnfermedades = data.map((caso: any) => caso.enfermedad || 'Desconocida');
+        const listaEnfermedades = data.map((caso: any) => caso.enfermedad ? caso.enfermedad.trim() : 'Desconocida');
         return Array.from(new Set(listaEnfermedades)) as string[];
     }, [data]);
 
@@ -50,7 +50,9 @@ const ChartBarrasEdadPorEnfermedad = ({ data }: { data: any[] }) => {
         };
 
         casosFiltrados.forEach(caso => {
-            let claveRango = "65+";
+            if (caso.edad === null || caso.edad === undefined) return;
+            
+            let claveRango = "65+"; 
             if (caso.edad <= 14) claveRango = "0-14";
             else if (caso.edad <= 24) claveRango = "15-24";
             else if (caso.edad <= 34) claveRango = "25-34";
