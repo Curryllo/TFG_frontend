@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Activity, Bug, Eye, Map } from 'lucide-react';
-import EstrategiaHumanos from '@/components/EstrategiaHumanos';
-import EstrategiaMonitoreo from '@/components/EstrategiaMonitoreo';
-import EstrategiaGarrapatas from '@/components/EstrategiaGarrapatas';
-import EstrategiaCalor from '@/components/EstrategiaCalor';
+import dynamic from 'next/dynamic';
+
+const EstrategiaHumanos = dynamic(() => import('@/components/EstrategiaHumanos'), { ssr: false });
+const EstrategiaMonitoreo = dynamic(() => import('@/components/EstrategiaMonitoreo'), { ssr: false });
+const EstrategiaGarrapatas = dynamic(() => import('@/components/EstrategiaGarrapatas'), { ssr: false });
+const EstrategiaCalor = dynamic(() => import('@/components/EstrategiaCalor'), { ssr: false });
 
 
 

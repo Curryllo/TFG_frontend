@@ -33,7 +33,7 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
             return acc;
         }, {} as Record<string, { especie: string, humano: number, animal: number }>);
 
-        const datosFinales = Object.values(agrupados);
+        const datosFinales = Object.values(agrupados) as { especie: string, humano: number, animal: number }[];
         datosFinales.sort((a, b) => (b.humano + b.animal) - (a.humano + a.animal));
 
         return {

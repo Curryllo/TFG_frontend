@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { DatoVectorHumano } from '@/types/map';
 
-export default function AutoBounds({ data }: { data: DatoVectorHumano[] }) {
+export default function AutoBounds({ data }: { data: any[] }) {
     const map = useMap();
 
     useEffect(() => {

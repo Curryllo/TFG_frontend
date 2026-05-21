@@ -28,7 +28,7 @@ const ChartBarrasEdadPorEnfermedad = ({ data }: { data: any[] }) => {
             { type: "category", position: "bottom", title: { text: "Rango de Edad" } },
             { type: "number", position: "left", title: { text: "Número de Casos" } }
         ]
-    });
+    } as unknown as AgChartOptions);
 
     useEffect(() => {
         if (data.length === 0 || !enfermedadSeleccionada) return;

@@ -7,7 +7,7 @@ import { AgChartOptions } from 'ag-charts-community';
 const ChartBarrasEdadCasos = ({ data }: { data: any[] }) => {
     
     
-    const [options, setOptions] = useState<AgChartOptions>({
+    const [options, setOptions] = useState<any>({
         title: { text: "Casos de enfermedades por grupos de edad" },
         subtitle: { text: " " },
         data: [],
@@ -70,7 +70,7 @@ const ChartBarrasEdadCasos = ({ data }: { data: any[] }) => {
             strokeWidth: 0
         }));
 
-        setOptions((opcionesPrevias) => ({
+        setOptions((opcionesPrevias: any) => ({
             ...opcionesPrevias,
             data: datosParaGrafica,
             series: seriesDinamicas
