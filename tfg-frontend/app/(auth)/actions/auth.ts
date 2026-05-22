@@ -6,7 +6,7 @@ export async function postLogIn(prevState: any, data: FormData) {
     const mail = data.get('email');
     const password = data.get('password');
 
-    const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
     try {
 
@@ -52,7 +52,7 @@ export async function postLogIn(prevState: any, data: FormData) {
 export async function cerrarSesion() {
     const cookieStore = await cookies();
     const token = cookieStore.get('refreshToken')?.value;
-    const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
     if (token) {
         try {
             await fetch(`${API_BASE_URL}/api/auth/logout`, {
@@ -78,7 +78,7 @@ export async function refrescarSesionServidor() {
     const cookieStore = await cookies();
 
     const refreshToken = cookieStore.get('refreshToken')?.value;
-    const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
     if (!refreshToken) return { success: false };
 
@@ -139,7 +139,7 @@ export async function postSingIn(prevState: any, data: FormData) {
         rol = "User";
     }
     const password = data.get('password');
-    const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
     console.log("URL", `${API_BASE_URL}/api/auth/singIn`);
 
     try {
