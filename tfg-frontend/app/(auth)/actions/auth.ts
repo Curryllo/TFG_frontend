@@ -8,40 +8,44 @@ export async function postLogIn(prevState: any, data: FormData) {
 
     const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ mail, password }),
-    });
+    try {
 
-    if (!response.ok) {
-        return { success: false, message: `Error del servidor: ${response.status}` };
-    }
-
-    const result = await response.json();
-
-    //console.log("=== RESPUESTA DE SPRING BOOT ===");
-    //console.log("Status:", response.status);
-    //console.log("JSON recibido:", result);
-    //console.log("================================");
-
-    const tokenAcceso = result.tokenAcceso;
-    const tokenRefresco = result.tokenRefresco;
-
-    if (tokenRefresco) {
-        const cookieStore = await cookies();
-        cookieStore.set({
-            name: 'refreshToken',
-            value: tokenRefresco,
-            httpOnly: true,
-            path: '/'
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ mail, password }),
         });
+
+        if (!response.ok) {
+            return { success: false, message: `Error del servidor: ${response.status}` };
+        }
+
+        const result = await response.json();
+
+        //console.log("=== RESPUESTA DE SPRING BOOT ===");
+        //console.log("Status:", response.status);
+        //console.log("JSON recibido:", result);
+        //console.log("================================");
+
+        const tokenAcceso = result.tokenAcceso;
+        const tokenRefresco = result.tokenRefresco;
+
+        if (tokenRefresco) {
+            const cookieStore = await cookies();
+            cookieStore.set({
+                name: 'refreshToken',
+                value: tokenRefresco,
+                httpOnly: true,
+                path: '/'
+            });
+        }
+
+        return { success: true, token: tokenAcceso };
+    } catch (error) {
+        return { success: false };
     }
-
-    return { success: true, token: tokenAcceso };
-
 }
 
 export async function cerrarSesion() {
@@ -71,7 +75,7 @@ export async function cerrarSesion() {
 
 export async function refrescarSesionServidor() {
     const cookieStore = await cookies();
-    
+
     const refreshToken = cookieStore.get('refreshToken')?.value;
     const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
