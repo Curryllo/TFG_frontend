@@ -44,6 +44,7 @@ export async function postLogIn(prevState: any, data: FormData) {
 
         return { success: true, token: tokenAcceso };
     } catch (error) {
+        console.error("No se pudo enviar la solicitud", error);
         return { success: false };
     }
 }
