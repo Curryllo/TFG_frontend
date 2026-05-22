@@ -135,6 +135,7 @@ export async function postSingIn(prevState: any, data: FormData) {
     }
     const password = data.get('password');
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    console.log("URL", `${API_BASE_URL}/api/auth/singIn`);
 
     try {
         await fetch(`${API_BASE_URL}/api/auth/singIn`, {
