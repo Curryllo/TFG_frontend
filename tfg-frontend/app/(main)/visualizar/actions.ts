@@ -3,12 +3,15 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import Papa from "papaparse";
 
+const S3_ACCESS_KEY = process.env.NEXT_S3_ACCESS_KEY;
+const S3_SECRET_KEY = process.env.NEXT_S3_SECRET_ACCESS_KEY;
+
 const s3Client = new S3Client({
     endpoint: "http://127.0.0.1:9000",
-    region: "us-east-1",
+    region: "eu-north-1",
     credentials: {
-        accessKeyId: "root",
-        secretAccessKey: "miniopassword",
+        accessKeyId: S3_ACCESS_KEY as string,
+        secretAccessKey: S3_SECRET_KEY as string,
     },
     forcePathStyle: true,
 });
@@ -17,7 +20,7 @@ export async function getDatosMontireo() {
     noStore();
     try {
         const command = new GetObjectCommand({
-            Bucket: "tfg-data-lake",
+            Bucket: "tfg-curro-s3",
             Key: "datosLimpios.csv",
         });
 
@@ -66,7 +69,7 @@ export async function getDatosHumanos() {
     noStore();
     try {
         const command = new GetObjectCommand({
-            Bucket: "tfg-data-lake",
+            Bucket: "tfg-curro-s3",
             Key: "datosLimpiosHumanos.csv",
         });
 
@@ -107,7 +110,7 @@ export async function getDatosGarrapatas() {
     noStore();
     try {
         const command = new GetObjectCommand({
-            Bucket: "tfg-data-lake",
+            Bucket: "tfg-curro-s3",
             Key: "datosLimpiosGarrapatas.csv",
         });
 
