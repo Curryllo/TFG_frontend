@@ -6,7 +6,9 @@ export async function postLogIn(prevState: any, data: FormData) {
     const mail = data.get('email');
     const password = data.get('password');
 
-    const response = await fetch('http://172.31.245.33:8080/api/auth/login', {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -45,10 +47,10 @@ export async function postLogIn(prevState: any, data: FormData) {
 export async function cerrarSesion() {
     const cookieStore = await cookies();
     const token = cookieStore.get('refreshToken')?.value;
-
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
     if (token) {
         try {
-            await fetch('http://172.31.245.33:8080/api/auth/logout', {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 headers: {
                     // Enviamos la cookie manualmente o el token en la cabecera
@@ -71,11 +73,12 @@ export async function refrescarSesionServidor() {
     const cookieStore = await cookies();
     
     const refreshToken = cookieStore.get('refreshToken')?.value;
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
     if (!refreshToken) return { success: false };
 
     try {
-        const response = await fetch('http://172.31.245.33:8080/api/auth/refresh', {
+        const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
             method: 'GET',
             headers: {
                 'Cookie': `refreshToken=${refreshToken}`
@@ -131,10 +134,10 @@ export async function postSingIn(prevState: any, data: FormData) {
         rol = "User";
     }
     const password = data.get('password');
-
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
     try {
-        await fetch('http://172.31.245.33:8080/api/auth/singIn', {
+        await fetch(`${API_BASE_URL}/api/auth/singIn`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

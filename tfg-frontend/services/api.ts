@@ -10,7 +10,9 @@ export async function peticionAutenticada(endpoint: string, opciones: RequestIni
     }
     if (token) headers.set('Authorization', `Bearer ${token}`);
 
-    let response = await fetch(`http://172.31.245.33:8080/api${endpoint}`, { ...opciones, headers });
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+
+    let response = await fetch(`${API_BASE_URL}/api${endpoint}`, { ...opciones, headers });
 
     // SI HAY ERROR 401 (TOKEN CADUCADO)
     if (response.status === 401) {
@@ -20,7 +22,7 @@ export async function peticionAutenticada(endpoint: string, opciones: RequestIni
             // Actualizamos Zustand y reintentamos
             useAuthStore.getState().setToken(result.token);
             headers.set('Authorization', `Bearer ${result.token}`);
-            response = await fetch(`http://172.31.245.33:8080/api${endpoint}`, { ...opciones, headers });
+            response = await fetch(`${API_BASE_URL}/api${endpoint}`, { ...opciones, headers });
         } else {
             // Si el refresh también falla, al login
             useAuthStore.getState().limpiarToken();
