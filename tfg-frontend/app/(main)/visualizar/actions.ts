@@ -7,13 +7,11 @@ const S3_ACCESS_KEY = process.env.NEXT_S3_ACCESS_KEY;
 const S3_SECRET_KEY = process.env.NEXT_S3_SECRET_ACCESS_KEY;
 
 const s3Client = new S3Client({
-    endpoint: "http://127.0.0.1:9000",
     region: "eu-north-1",
     credentials: {
         accessKeyId: S3_ACCESS_KEY as string,
         secretAccessKey: S3_SECRET_KEY as string,
     },
-    forcePathStyle: true,
 });
 
 export async function getDatosMontireo() {
