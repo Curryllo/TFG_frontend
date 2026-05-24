@@ -57,7 +57,7 @@ export async function getDatosMontireo() {
         //console.log("Datos monitoreo procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
     } catch (error) {
-        console.error("Error leyendo de MinIO:", error);
+        console.error("Error leyendo de S3:", error);
         return { success: false, data: [] };
     }
 
@@ -148,7 +148,7 @@ export async function getDatosGarrapatas() {
         return { success: true, data: datosLimpios };
 
     } catch (error) {
-        console.error("Error leyendo de MinIO:", error);
+        console.error("Error leyendo de S3:", error);
         return { success: false, data: [] };
     }
 }
