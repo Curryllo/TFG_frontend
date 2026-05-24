@@ -98,7 +98,7 @@ export async function getDatosHumanos() {
         //console.log("Datos humanos procesados:", datosLimpios);
         return { success: true, data: datosLimpios };
     } catch (error) {
-        console.error("Error leyendo de MinIO:", error);
+        console.error("Error leyendo de S3:", JSON.stringify(error, null, 2));
         return { success: false, data: [] };
     }
 
