@@ -25,7 +25,7 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
             }
             
             const enHumano = caso.enHumano ? String(caso.enHumano).trim() : '';
-            const enAnimal = caso.enAnimal ? String(caso.enAnimal).trim() : '';
+            const enAnimal = caso.animal ? String(caso.animal).trim() : '';
 
             if (enHumano === 'Y') acc[especie].humano += 1;
             if (enAnimal !== '') acc[especie].animal += 1;
