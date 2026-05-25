@@ -23,13 +23,19 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
             if (!acc[especie]) {
                 acc[especie] = { especie: especie, humano: 0, animal: 0 };
             }
-            
-            const enHumano = caso.enHumano ? String(caso.enHumano).trim() : '';
-            const enAnimal = caso.animal ? String(caso.animal).trim() : '';
 
-            if (enHumano === 'Y') acc[especie].humano += 1;
-            if (enAnimal !== '') acc[especie].animal += 1;
-            
+            const valorHumano = caso.enHumano !== undefined && caso.enHumano !== null ? String(caso.enHumano).trim().toLowerCase() : 'no';
+            const esHumano = valorHumano === 'true' || valorHumano === 'y' || valorHumano === 'sí' || valorHumano === 'si';
+
+            const valorAnimal = caso.enAnimal !== undefined && caso.enAnimal !== null ? String(caso.enAnimal).trim().toLowerCase() : '';
+            const esAnimal = !esHumano && valorAnimal !== '' && valorAnimal !== 'desconocido';
+
+            if (esHumano) {
+                acc[especie].humano += 1;
+            } else if (esAnimal) {
+                acc[especie].animal += 1;
+            }
+
             return acc;
         }, {} as Record<string, { especie: string, humano: number, animal: number }>);
 
@@ -41,9 +47,9 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
             data: datosFinales,
             axes: [
                 { type: "category", position: "bottom", title: { text: "Especie" } },
-                { 
-                    type: "number", 
-                    position: "left", 
+                {
+                    type: "number",
+                    position: "left",
                     title: { text: modoPorcentaje ? "Porcentaje (%)" : "Cantidad Absoluta" },
                     label: { formatter: (params: any) => modoPorcentaje ? `${params.value}%` : String(params.value) }
                 }
@@ -56,7 +62,7 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
                     yName: "En Humanos",
                     stacked: true,
                     normalizedTo: modoPorcentaje ? 100 : undefined,
-                    fill: "#ef4444", 
+                    fill: "#ef4444",
                     strokeWidth: 0
                 },
                 {
@@ -66,7 +72,7 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
                     yName: "En Animales",
                     stacked: true,
                     normalizedTo: modoPorcentaje ? 100 : undefined,
-                    fill: "#3b82f6", 
+                    fill: "#3b82f6",
                     strokeWidth: 0
                 }
             ]
@@ -75,13 +81,13 @@ const ChartBarrasGarrapatas = ({ data }: { data: any[] }) => {
 
     return (
         <div className="bg-white p-6 rounded-xl shadow border border-gray-200 mx-4 my-2">
-            <button 
+            <button
                 onClick={() => setModoPorcentaje(!modoPorcentaje)}
                 className='mb-4 p-2 border border-gray-300 rounded-lg outline-none bg-white text-gray-800 hover:bg-gray-50 transition-colors'
             >
                 Cambiar a {modoPorcentaje ? 'Valores Absolutos' : 'Porcentajes (%)'}
             </button>
-            
+
             <div>
                 <AgCharts key={JSON.stringify(chartOptions.data)} options={chartOptions} />
             </div>
