@@ -90,7 +90,7 @@ export default function DataVisualization() {
                             <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
                                 <Map className="w-10 h-10 text-indigo-600" />
                             </div>
-                            <h2 className="text-xl font-semibold text-gray-900">Mapa</h2>
+                            <h2 className="text-xl font-semibold text-gray-900">Mapas</h2>
                             <p className="text-gray-600 text-center text-sm">
                                 Ver distribución geográfica de casos
                             </p>
