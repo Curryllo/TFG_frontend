@@ -1,5 +1,5 @@
 
-# FrontEnd Management, monitoring and alert system for vector-borne disease
+# FrontEnd Management, monitoring and alert system for vector-borne diseases
 
 Graphical User Interface for the system
 
